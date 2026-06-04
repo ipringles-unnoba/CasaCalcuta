@@ -89,7 +89,6 @@ jobs:
           touch resources/views/.gitkeep
 
           php8.5 $(command -v composer) install --no-dev --optimize-autoloader
-
           php8.5 artisan optimize:clear
           php8.5 artisan storage:link || true
           php8.5 artisan optimize
