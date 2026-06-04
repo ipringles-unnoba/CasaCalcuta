@@ -2,9 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use App\Models\Permiso;
+use App\Models\Rol;
+use App\Models\Usuario;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,11 +18,37 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $rol = Rol::query()->firstOrCreate(
+            ['nombre' => 'Administrador'],
+            ['descripcion' => 'Rol con acceso total al sistema']
+        );
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $permisos = collect([
+            Permiso::query()->firstOrCreate(
+                ['nombre' => 'Gestionar usuarios'],
+                ['modulo' => 'usuarios']
+            ),
+            Permiso::query()->firstOrCreate(
+                ['nombre' => 'Gestionar roles'],
+                ['modulo' => 'roles']
+            ),
+            Permiso::query()->firstOrCreate(
+                ['nombre' => 'Gestionar permisos'],
+                ['modulo' => 'permisos']
+            ),
         ]);
+
+        $usuario = Usuario::query()->updateOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'nombre' => 'Admin',
+                'apellido' => 'Sistema',
+                'contrasena' => Hash::make('password'),
+                'activo' => true,
+                'rol_id' => $rol->id_rol,
+            ]
+        );
+
+        $rol->permisos()->syncWithoutDetaching($permisos->pluck('id_permiso'));
     }
 }

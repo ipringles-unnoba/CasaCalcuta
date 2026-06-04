@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Rol;
+use App\Models\Usuario;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,15 +33,28 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'nombre' => 'required|string|max:255',
+            'apellido' => 'required|string|max:255',
+            'email' => 'required|string|lowercase|email|max:255|unique:'.Usuario::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ], [
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.confirmed' => 'La confirmación de la contraseña no coincide.',
+            'password.min' => 'La contraseña debe tener al menos :min caracteres.',
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
+        $rol = Rol::query()->firstOrCreate(
+            ['nombre' => 'Usuario'],
+            ['descripcion' => 'Rol por defecto para usuarios registrados']
+        );
+
+        $user = Usuario::create([
+            'nombre' => $request->nombre,
+            'apellido' => $request->apellido,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'contrasena' => Hash::make($request->password),
+            'activo' => true,
+            'rol_id' => $rol->id_rol,
         ]);
 
         event(new Registered($user));
