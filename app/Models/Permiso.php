@@ -14,6 +14,8 @@ class Permiso extends Model
     /** @use HasFactory<PermisoFactory> */
     use HasFactory;
 
+    protected $fillable = ['nombre', 'modulo'];
+
     protected $table = 'permisos';
 
     protected $primaryKey = 'id_permiso';

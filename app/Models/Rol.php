@@ -15,6 +15,8 @@ class Rol extends Model
     /** @use HasFactory<RolFactory> */
     use HasFactory;
 
+    protected $fillable = ['nombre', 'descripcion'];
+
     protected $table = 'roles';
 
     protected $primaryKey = 'id_rol';

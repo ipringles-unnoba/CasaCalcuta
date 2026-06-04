@@ -14,6 +14,8 @@ class Notificacion extends Model
     /** @use HasFactory<NotificacionFactory> */
     use HasFactory;
 
+    protected $fillable = ['fecha', 'motivo'];
+
     protected $table = 'notificaciones';
 
     protected $primaryKey = 'id_notificacion';
