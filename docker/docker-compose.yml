@@ -2,7 +2,7 @@ name: Gdp-TPI
 
 services:
   app:
-    image: php:8.3-cli-bookworm
+    image: php:8.5-cli-bookworm
     container_name: CasaCalcuta-backend
     working_dir: /var/www/html
     volumes:
