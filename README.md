@@ -1,58 +1,86 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# CasaCalcuta API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+CasaCalcuta es una API backend en Laravel para gestionar usuarios, roles, permisos y notificaciones.
 
-## About Laravel
+Usa autenticación JWT y expone endpoints REST en `routes/api.php`.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Que hace
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Autenticación con JWT.
+- CRUD de usuarios.
+- Manejo de roles y permisos.
+- Respuestas JSON para consumo desde cliente externo o Postman.
+- Base de datos MySQL/Percona con migraciones y seeders.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Carpetas clave
 
-## Learning Laravel
+### `postman/`
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Colección y entorno para probar la API.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- `CasaCalcuta.postman_collection.json`: endpoints listos para usar.
+- `CasaCalcuta.local.postman_environment.json`: variables como `base_url` y `access_token`.
+- `README.md`: instrucciones de uso.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+### `docker/`
 
-## Agentic Development
+Configuración del stack de desarrollo.
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+- `docker-compose.yml`: levanta `CasaCalcuta-backend` y `CasaCalcuta-BD`.
+- El backend expone Laravel en `http://localhost:8000`.
+- La base expone `3306` para acceso directo si hace falta.
+
+### `backup-bd/`
+
+Backups de la base de datos y scripts de restauración.
+
+- `casacalcuta-full-YYYYmmdd-HHMMSS.sql`: dump completo con estructura y datos.
+- `backup.sh` / `backup.bat`: generan un nuevo backup.
+- `restore.sh` / `restore.bat`: restauran el dump más reciente o uno indicado por parámetro.
+
+## Arranque
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+docker compose -f docker/docker-compose.yml up -d
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Seed inicial
 
-## Contributing
+```bash
+docker compose -f docker/docker-compose.yml exec -T app php artisan db:seed --force
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## AGENTES
 
-## Code of Conduct
+Usar este prompt para transferir contexto base a un agente:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```text
+Proyecto: CasaCalcuta
 
-## Security Vulnerabilities
+Contexto:
+- Es una API backend en Laravel.
+- No tiene frontend React/Inertia/Vite.
+- Usa JWT para autenticación.
+- La base de datos es MySQL/Percona.
+- El stack Docker vive en `CasaCalcuta/docker/docker-compose.yml`.
+- Los contenedores se llaman `CasaCalcuta-backend` y `CasaCalcuta-BD`.
+- El backend escucha en `localhost:8000`.
+- La BD expone `3306`.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Carpetas importantes:
+- `postman/`: colección y entorno para probar endpoints.
+- `docker/`: definición del stack.
+- `backup-bd/`: dumps y scripts de backup/restore.
 
-## License
+Objetivo del agente:
+- [describir tarea concreta]
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Restricciones:
+- No agregar frontend.
+- Mantener la API en Laravel.
+- Usar Docker Compose desde `CasaCalcuta/docker`.
+- No ejecutar comandos PHP/Composer/Artisan/NPM ni tests directamente en el host.
+
+Verificación esperada:
+- [indicar comandos o pruebas necesarias]
+```
