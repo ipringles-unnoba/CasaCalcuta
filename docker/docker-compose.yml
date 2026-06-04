@@ -1,0 +1,59 @@
+name: Gdp-TPI
+
+services:
+  app:
+    image: php:8.3-cli-bookworm
+    container_name: CasaCalcuta-backend
+    working_dir: /var/www/html
+    volumes:
+      - ../:/var/www/html
+    ports:
+      - "8000:8000"
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_URL: http://localhost:8000
+      DB_CONNECTION: mysql
+      DB_HOST: percona
+      DB_PORT: 3306
+      DB_DATABASE: casacalcuta
+      DB_USERNAME: casacalcuta
+      DB_PASSWORD: casacalcuta
+      JWT_SECRET: ${JWT_SECRET:-change-me}
+    depends_on:
+      percona:
+        condition: service_healthy
+    command: >
+      sh -lc "apt-get update && apt-get install -y --no-install-recommends $$PHPIZE_DEPS default-mysql-client libzip-dev unzip git &&
+      docker-php-ext-install pdo_mysql zip &&
+      php -r \"copy('https://getcomposer.org/installer', 'composer-setup.php');\" &&
+      php composer-setup.php --install-dir=/usr/local/bin --filename=composer &&
+      rm composer-setup.php &&
+      composer install &&
+      php artisan migrate --force &&
+      php artisan serve --host=0.0.0.0 --port=8000"
+
+  percona:
+    image: percona:8.0.36-28
+    container_name: CasaCalcuta-BD
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: casacalcuta
+      MYSQL_USER: casacalcuta
+      MYSQL_PASSWORD: casacalcuta
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - percona_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  percona_data:

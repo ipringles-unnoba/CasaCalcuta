@@ -81,4 +81,19 @@ class UsuarioTest extends TestCase
             ->assertJsonValidationErrors(['contrasena'])
             ->assertJsonPath('errors.contrasena.0', 'La confirmación de la contraseña no coincide.');
     }
+
+    public function test_authenticated_user_can_delete_usuario(): void
+    {
+        $rol = Rol::factory()->create();
+        $user = Usuario::factory()->create(['rol_id' => $rol->id_rol]);
+        $usuario = Usuario::factory()->create(['rol_id' => $rol->id_rol]);
+
+        $this->actingAs($user, 'api')
+            ->deleteJson('/api/usuarios/'.$usuario->id_usuario)
+            ->assertNoContent();
+
+        $this->assertDatabaseMissing('usuarios', [
+            'id_usuario' => $usuario->id_usuario,
+        ]);
+    }
 }

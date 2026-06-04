@@ -7,8 +7,9 @@ use App\Http\Requests\StoreUsuarioRequest;
 use App\Http\Requests\UpdateUsuarioRequest;
 use App\Http\Resources\UsuarioResource;
 use App\Models\Usuario;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class UsuarioController extends Controller
 {
@@ -44,7 +45,7 @@ class UsuarioController extends Controller
         return (new UsuarioResource($usuario->load('rol')))->response();
     }
 
-    public function destroy(Usuario $usuario): JsonResponse
+    public function destroy(Usuario $usuario): Response
     {
         $usuario->delete();
 
