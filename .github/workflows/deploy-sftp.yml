@@ -1,4 +1,4 @@
-name: Deploy via SFTP
+name: Deploy Laravel via SFTP
 
 on:
   push:
@@ -20,7 +20,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install lftp
+      - name: Install deployment tools
         run: |
           sudo apt-get update
           sudo apt-get install -y lftp
@@ -50,9 +50,51 @@ jobs:
           mirror --reverse --delete --verbose \
             --exclude-glob .git/ \
             --exclude-glob .github/ \
-            --exclude-glob node_modules/ \
             --exclude-glob .env \
+            --exclude-glob vendor/ \
+            --exclude-glob node_modules/ \
+            --exclude-glob storage/logs/ \
+            --exclude-glob storage/framework/cache/ \
+            --exclude-glob storage/framework/sessions/ \
+            --exclude-glob storage/framework/views/ \
+            --exclude-glob storage/app/public/ \
             ./ "$SFTP_REMOTE_DIR"
 
           bye
+          EOF
+
+      - name: Run Laravel post-deploy commands
+        env:
+          SFTP_HOST: ${{ secrets.SFTP_HOST }}
+          SFTP_PORT: ${{ secrets.SFTP_PORT }}
+          SFTP_USER: ${{ secrets.SFTP_USER }}
+          SFTP_REMOTE_DIR: ${{ secrets.SFTP_REMOTE_DIR }}
+        run: |
+          ssh -i ~/.ssh/deploy_key \
+            -p "$SFTP_PORT" \
+            -o UserKnownHostsFile=~/.ssh/known_hosts \
+            -o StrictHostKeyChecking=yes \
+            "$SFTP_USER@$SFTP_HOST" <<EOF
+          set -e
+
+          cd "$SFTP_REMOTE_DIR"
+
+          if [ ! -f .env ]; then
+            echo "ERROR: No existe .env en el servidor."
+            echo "Crealo manualmente en $SFTP_REMOTE_DIR/.env antes de deployar."
+            exit 1
+          fi
+
+          mkdir -p resources/views
+          touch resources/views/.gitkeep
+
+          php8.5 \$(command -v composer) install --no-dev --optimize-autoloader
+
+          php8.5 artisan optimize:clear
+          php8.5 artisan storage:link || true
+          php8.5 artisan optimize
+
+          chmod -R ug+rwX storage bootstrap/cache
+
+          echo "Deploy Laravel finalizado correctamente."
           EOF
