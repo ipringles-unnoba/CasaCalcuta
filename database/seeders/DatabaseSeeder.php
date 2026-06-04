@@ -99,5 +99,7 @@ class DatabaseSeeder extends Seeder
         $roles->firstWhere('nombre', 'Consulta')?->permisos()->syncWithoutDetaching(
             $permisos->where('nombre', 'Ver usuarios')->pluck('id_permiso')
         );
+
+        $this->call(SimpsonFamiliesSeeder::class);
     }
 }

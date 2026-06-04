@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Api\Concerns\CrudController;
 use App\Http\Controllers\Controller;
+use App\Models\Integrante;
 use App\Models\Familia;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 
 class FamiliaController extends Controller
 {
@@ -22,7 +24,7 @@ class FamiliaController extends Controller
 
     protected function relations(): array
     {
-        return ['registradoPor'];
+        return ['registradoPor', 'referente'];
     }
 
     protected function storeRules(): array
@@ -50,6 +52,12 @@ class FamiliaController extends Controller
             'fecha_ingreso' => ['sometimes', 'required', 'date'],
             'activa' => ['sometimes', 'required', 'boolean'],
             'registrado_por' => ['sometimes', 'required', 'integer', 'exists:usuarios,id_usuario'],
+            'referente_id' => [
+                'sometimes',
+                'nullable',
+                'integer',
+                Rule::exists('integrantes', 'id_integrante')->where('familia_id', $record->getKey()),
+            ],
         ];
     }
 
@@ -101,5 +109,51 @@ class FamiliaController extends Controller
     public function registrosAsistencia(Familia $familia): JsonResponse
     {
         return response()->json($familia->registrosAsistencia()->latest('id_registro_asistencia')->get());
+    }
+
+    public function referente(Familia $familia): JsonResponse
+    {
+        return response()->json($familia->load('referente')->referente);
+    }
+
+    public function syncReferente(Request $request, Familia $familia): JsonResponse
+    {
+        $data = $request->validate([
+            'integrante_id' => [
+                'required',
+                'integer',
+                Rule::exists('integrantes', 'id_integrante')->where('familia_id', $familia->id_familia),
+            ],
+        ]);
+
+        $integrante = $familia->integrantes()->whereKey($data['integrante_id'])->firstOrFail();
+
+        DB::transaction(function () use ($familia, $integrante): void {
+            $familia->loadMissing('referente');
+
+            if ($familia->referente && $familia->referente->getKey() !== $integrante->getKey()) {
+                $familia->referente->forceFill(['referente' => false])->save();
+            }
+
+            $integrante->forceFill(['referente' => true])->save();
+            $familia->forceFill(['referente_id' => $integrante->getKey()])->save();
+        });
+
+        return response()->json($familia->fresh(['registradoPor', 'referente']));
+    }
+
+    public function clearReferente(Familia $familia): JsonResponse
+    {
+        DB::transaction(function () use ($familia): void {
+            $familia->loadMissing('referente');
+
+            if ($familia->referente) {
+                $familia->referente->forceFill(['referente' => false])->save();
+            }
+
+            $familia->forceFill(['referente_id' => null])->save();
+        });
+
+        return response()->json($familia->fresh(['registradoPor', 'referente']));
     }
 }

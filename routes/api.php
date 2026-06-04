@@ -38,6 +38,9 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('permisos', PermisoController::class)->parameters(['permisos' => 'permiso']);
     Route::apiResource('notificaciones', NotificacionController::class)->parameters(['notificaciones' => 'notificacion']);
     Route::apiResource('familias', FamiliaController::class);
+    Route::get('familias/{familia}/referente', [FamiliaController::class, 'referente']);
+    Route::put('familias/{familia}/referente', [FamiliaController::class, 'syncReferente']);
+    Route::delete('familias/{familia}/referente', [FamiliaController::class, 'clearReferente']);
     Route::get('familias/{familia}/integrantes', [FamiliaController::class, 'integrantes']);
     Route::get('familias/{familia}/donaciones', [FamiliaController::class, 'donaciones']);
     Route::get('familias/{familia}/pedidos-especiales', [FamiliaController::class, 'pedidosEspeciales']);

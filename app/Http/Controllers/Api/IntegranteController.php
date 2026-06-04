@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Api\Concerns\CrudController;
 use App\Http\Controllers\Controller;
+use App\Models\Familia;
 use App\Models\Integrante;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class IntegranteController extends Controller
@@ -32,7 +34,7 @@ class IntegranteController extends Controller
             'apellido' => ['required', 'string', 'max:255'],
             'fecha_nacimiento' => ['required', 'date'],
             'tipo_documento' => ['required', 'string', 'max:255'],
-            'numero_documento' => ['required', 'string', 'max:255'],
+            'numero_documento' => ['required', 'string', 'max:255', Rule::unique('integrantes', 'numero_documento')],
             'categoria_etaria' => ['required', 'string', 'max:255'],
             'referente' => ['required', 'boolean'],
             'familia_id' => ['required', 'integer', 'exists:familias,id_familia'],
@@ -46,7 +48,7 @@ class IntegranteController extends Controller
             'apellido' => ['sometimes', 'required', 'string', 'max:255'],
             'fecha_nacimiento' => ['sometimes', 'required', 'date'],
             'tipo_documento' => ['sometimes', 'required', 'string', 'max:255'],
-            'numero_documento' => ['sometimes', 'required', 'string', 'max:255'],
+            'numero_documento' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('integrantes', 'numero_documento')->ignore($record->getKey(), 'id_integrante')],
             'categoria_etaria' => ['sometimes', 'required', 'string', 'max:255'],
             'referente' => ['sometimes', 'required', 'boolean'],
             'familia_id' => ['sometimes', 'required', 'integer', 'exists:familias,id_familia'],
@@ -60,7 +62,16 @@ class IntegranteController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        return $this->storeRecord($request);
+        $data = $request->validate($this->storeRules());
+
+        $integrante = DB::transaction(function () use ($data): Integrante {
+            $integrante = Integrante::query()->create($data);
+            $this->syncFamiliaReferente($integrante, null);
+
+            return $integrante;
+        });
+
+        return response()->json($integrante->load($this->relations()), 201);
     }
 
     public function show(Integrante $integrante): JsonResponse
@@ -70,7 +81,17 @@ class IntegranteController extends Controller
 
     public function update(Request $request, Integrante $integrante): JsonResponse
     {
-        return $this->updateRecord($request, $integrante);
+        $data = $request->validate($this->updateRules($integrante));
+        $originalFamiliaId = $integrante->familia_id;
+
+        DB::transaction(function () use ($integrante, $data, $originalFamiliaId): void {
+            $integrante->fill($data);
+            $integrante->save();
+
+            $this->syncFamiliaReferente($integrante, $originalFamiliaId);
+        });
+
+        return response()->json($integrante->load($this->relations()));
     }
 
     public function destroy(Integrante $integrante): Response
@@ -86,5 +107,35 @@ class IntegranteController extends Controller
     public function participacionesComision(Integrante $integrante): JsonResponse
     {
         return response()->json($integrante->participacionesComision()->latest('id_participacion_comision')->get());
+    }
+
+    protected function syncFamiliaReferente(Integrante $integrante, ?int $originalFamiliaId): void
+    {
+        $familia = $integrante->familia()->with('referente')->first();
+
+        if ($originalFamiliaId && $familia && $familia->getKey() !== $originalFamiliaId) {
+            $originalFamilia = Familia::query()->with('referente')->find($originalFamiliaId);
+
+            if ($originalFamilia && $originalFamilia->referente && $originalFamilia->referente->getKey() === $integrante->getKey()) {
+                $originalFamilia->forceFill(['referente_id' => null])->save();
+            }
+        }
+
+        if (! $familia) {
+            return;
+        }
+
+        if ($integrante->referente) {
+            if ($familia->referente && $familia->referente->getKey() !== $integrante->getKey()) {
+                $familia->referente->forceFill(['referente' => false])->save();
+            }
+
+            $familia->forceFill(['referente_id' => $integrante->getKey()])->save();
+            return;
+        }
+
+        if ($familia->referente && $familia->referente->getKey() === $integrante->getKey()) {
+            $familia->forceFill(['referente_id' => null])->save();
+        }
     }
 }

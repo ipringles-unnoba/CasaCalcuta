@@ -49,6 +49,7 @@ Colección para probar la API backend de CasaCalcuta.
 - `GET /api/roles/{rol}/permisos`
 - `POST /api/roles/{rol}/permisos/sync`
 - `GET /api/familias/{familia}/integrantes`
+- `GET|PUT|DELETE /api/familias/{familia}/referente`
 - `GET /api/familias/{familia}/donaciones`
 - `GET /api/familias/{familia}/pedidos-especiales`
 - `GET /api/familias/{familia}/registros-asistencia`
@@ -68,6 +69,7 @@ Colección para probar la API backend de CasaCalcuta.
 - `GET /api/roles`
 - `POST /api/familias`
 - `POST /api/integrantes`
+- `PUT /api/familias/{familia}/referente`
 - `POST /api/comisiones`
 - `POST /api/participaciones-comision`
 - `POST /api/documentos`
