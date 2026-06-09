@@ -46,6 +46,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('familias/{familia}/pedidos-especiales', [FamiliaController::class, 'pedidosEspeciales']);
     Route::get('familias/{familia}/visitas-domiciliarias', [FamiliaController::class, 'visitasDomiciliarias']);
     Route::get('familias/{familia}/registros-asistencia', [FamiliaController::class, 'registrosAsistencia']);
+    Route::post('familias/{familia}/evaluar-prioridad', [FamiliaController::class, 'evaluarPrioridad'])->middleware('verificar.rol:Administrador,Coordinador');
 
     Route::apiResource('integrantes', IntegranteController::class);
     Route::get('integrantes/{integrante}/documentos', [IntegranteController::class, 'documentos']);

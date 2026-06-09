@@ -13,15 +13,16 @@ class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
 
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
         $roles = collect([
             Rol::query()->firstOrCreate(
                 ['nombre' => 'Administrador'],
                 ['descripcion' => 'Rol con acceso total al sistema']
+            ),
+            Rol::query()->firstOrCreate(
+                ['nombre' => 'Coordinador'],
+                ['descripcion' => 'Responsable de la gestión de familias y listas. Autoriza el paso de lista de espera a principal y gestiona las alertas de ausentismo.']
             ),
             Rol::query()->firstOrCreate(
                 ['nombre' => 'Operador'],
@@ -54,6 +55,14 @@ class DatabaseSeeder extends Seeder
                 ['nombre' => 'Ver usuarios'],
                 ['modulo' => 'usuarios']
             ),
+            Permiso::query()->firstOrCreate(
+                ['nombre' => 'Evaluar prioridad social'],
+                ['modulo' => 'priorizacion']
+            ),
+            Permiso::query()->firstOrCreate(
+                ['nombre' => 'Gestionar listas'],
+                ['modulo' => 'familias']
+            ),
         ]);
 
         $usuarios = [
@@ -62,6 +71,12 @@ class DatabaseSeeder extends Seeder
                 'nombre' => 'Admin',
                 'apellido' => 'Sistema',
                 'rol' => 'Administrador',
+            ],
+            [
+                'email' => 'coordinador@example.com',
+                'nombre' => 'Coordinador',
+                'apellido' => 'CasaCalcuta',
+                'rol' => 'Coordinador',
             ],
             [
                 'email' => 'operador@example.com',
@@ -92,7 +107,18 @@ class DatabaseSeeder extends Seeder
             );
         }
 
-        $roles->firstWhere('nombre', 'Administrador')?->permisos()->syncWithoutDetaching($permisos->pluck('id_permiso'));
+        $administrador = $roles->firstWhere('nombre', 'Administrador');
+        $coordinador = $roles->firstWhere('nombre', 'Coordinador');
+
+        $administrador?->permisos()->syncWithoutDetaching($permisos->pluck('id_permiso'));
+        $coordinador?->permisos()->syncWithoutDetaching(
+            $permisos->whereIn('nombre', [
+                'Evaluar prioridad social',
+                'Gestionar listas',
+                'Gestionar notificaciones',
+                'Ver usuarios',
+            ])->pluck('id_permiso')
+        );
         $roles->firstWhere('nombre', 'Operador')?->permisos()->syncWithoutDetaching(
             $permisos->whereIn('nombre', ['Gestionar notificaciones', 'Ver usuarios'])->pluck('id_permiso')
         );
