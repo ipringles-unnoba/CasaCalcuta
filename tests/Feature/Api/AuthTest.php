@@ -3,13 +3,10 @@
 namespace Tests\Feature\Api;
 
 use App\Models\Usuario;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class AuthTest extends TestCase
 {
-    use RefreshDatabase;
-
     public function test_login_returns_jwt_token(): void
     {
         $user = Usuario::factory()->create([

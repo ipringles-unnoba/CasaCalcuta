@@ -17,6 +17,10 @@ class IntegranteController extends Controller
 {
     use CrudController;
 
+    private const VIEW_PERMISSIONS = ['Ver familias', 'Gestionar familias'];
+
+    private const MANAGE_PERMISSION = ['Gestionar familias'];
+
     protected function modelClass(): string
     {
         return Integrante::class;
@@ -55,11 +59,19 @@ class IntegranteController extends Controller
 
     public function index(Request $request): JsonResponse
     {
+        if ($response = $this->authorizeFamilyPermissions($request, self::VIEW_PERMISSIONS)) {
+            return $response;
+        }
+
         return $this->indexRecords($request);
     }
 
     public function store(Request $request): JsonResponse
     {
+        if ($response = $this->authorizeFamilyPermissions($request, self::MANAGE_PERMISSION)) {
+            return $response;
+        }
+
         $data = $request->validate($this->storeRules());
 
         $integrante = DB::transaction(function () use ($data): Integrante {
@@ -74,11 +86,19 @@ class IntegranteController extends Controller
 
     public function show(Integrante $integrante): JsonResponse
     {
+        if ($response = $this->authorizeFamilyPermissions(request(), self::VIEW_PERMISSIONS)) {
+            return $response;
+        }
+
         return $this->showRecord($integrante);
     }
 
     public function update(Request $request, Integrante $integrante): JsonResponse
     {
+        if ($response = $this->authorizeFamilyPermissions($request, self::MANAGE_PERMISSION)) {
+            return $response;
+        }
+
         $data = $request->validate($this->updateRules($integrante));
         $originalFamiliaId = $integrante->familia_id;
 
@@ -92,8 +112,12 @@ class IntegranteController extends Controller
         return response()->json($integrante->load($this->relations()));
     }
 
-    public function destroy(Integrante $integrante): Response
+    public function destroy(Integrante $integrante): JsonResponse|Response
     {
+        if ($response = $this->authorizeFamilyPermissions(request(), self::MANAGE_PERMISSION)) {
+            return $response;
+        }
+
         DB::transaction(function () use ($integrante): void {
             $integrante->delete();
         });
@@ -103,11 +127,19 @@ class IntegranteController extends Controller
 
     public function documentos(Integrante $integrante): JsonResponse
     {
+        if ($response = $this->authorizeFamilyPermissions(request(), self::VIEW_PERMISSIONS)) {
+            return $response;
+        }
+
         return response()->json($integrante->documentos()->latest('id_documento')->get());
     }
 
     public function participacionesComision(Integrante $integrante): JsonResponse
     {
+        if ($response = $this->authorizeFamilyPermissions(request(), self::VIEW_PERMISSIONS)) {
+            return $response;
+        }
+
         return response()->json($integrante->participacionesComision()->latest('id_participacion_comision')->get());
     }
 
@@ -139,6 +171,27 @@ class IntegranteController extends Controller
         if ($familia->referente && $familia->referente->getKey() === $integrante->getKey()) {
             $familia->forceFill(['referente_id' => null])->save();
         }
+    }
+
+    private function authorizeFamilyPermissions(Request $request, array $requiredPermissions): ?JsonResponse
+    {
+        $usuario = $request->user();
+
+        if ($usuario === null) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
+        }
+
+        $usuario->loadMissing('rol.permisos');
+        $permissions = $usuario->rol?->permisos ?? collect();
+        $requiredPermissions = array_map('mb_strtolower', $requiredPermissions);
+
+        foreach ($permissions as $permiso) {
+            if (in_array(mb_strtolower($permiso->nombre), $requiredPermissions, true)) {
+                return null;
+            }
+        }
+
+        return response()->json(['message' => 'Acceso no autorizado. Falta el permiso: ' . implode(' o ', $requiredPermissions) . '.'], 403);
     }
 
 }

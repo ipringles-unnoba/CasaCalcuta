@@ -18,6 +18,10 @@ class FamiliaController extends Controller
 {
     use CrudController;
 
+    private const VIEW_PERMISSIONS = ['Ver familias', 'Gestionar familias'];
+
+    private const MANAGE_PERMISSION = ['Gestionar familias'];
+
     protected function modelClass(): string
     {
         return Familia::class;
@@ -64,6 +68,10 @@ class FamiliaController extends Controller
 
     public function index(Request $request): JsonResponse
     {
+        if ($response = $this->authorizeFamilyPermissions($request, self::VIEW_PERMISSIONS)) {
+            return $response;
+        }
+
         $query = Familia::query()->with($this->relations())->latest($this->orderBy());
 
         if ($request->filled('prioridad_social')) {
@@ -97,56 +105,100 @@ class FamiliaController extends Controller
 
     public function store(Request $request): JsonResponse
     {
+        if ($response = $this->authorizeFamilyPermissions($request, self::MANAGE_PERMISSION)) {
+            return $response;
+        }
+
         return $this->storeRecord($request);
     }
 
     public function show(Familia $familia): JsonResponse
     {
+        if ($response = $this->authorizeFamilyPermissions(request(), self::VIEW_PERMISSIONS)) {
+            return $response;
+        }
+
         return $this->showRecord($familia);
     }
 
     public function update(Request $request, Familia $familia): JsonResponse
     {
+        if ($response = $this->authorizeFamilyPermissions($request, self::MANAGE_PERMISSION)) {
+            return $response;
+        }
+
         return $this->updateRecord($request, $familia);
     }
 
-    public function destroy(Familia $familia): Response
+    public function destroy(Familia $familia): JsonResponse|Response
     {
+        if ($response = $this->authorizeFamilyPermissions(request(), self::MANAGE_PERMISSION)) {
+            return $response;
+        }
+
         return $this->destroyRecord($familia);
     }
 
     public function integrantes(Familia $familia): JsonResponse
     {
+        if ($response = $this->authorizeFamilyPermissions(request(), self::VIEW_PERMISSIONS)) {
+            return $response;
+        }
+
         return response()->json($familia->integrantes()->latest('id_integrante')->get());
     }
 
     public function donaciones(Familia $familia): JsonResponse
     {
+        if ($response = $this->authorizeFamilyPermissions(request(), self::VIEW_PERMISSIONS)) {
+            return $response;
+        }
+
         return response()->json($familia->donaciones()->latest('id_donacion')->get());
     }
 
     public function pedidosEspeciales(Familia $familia): JsonResponse
     {
+        if ($response = $this->authorizeFamilyPermissions(request(), self::VIEW_PERMISSIONS)) {
+            return $response;
+        }
+
         return response()->json($familia->pedidosEspeciales()->latest('id_pedido_especial')->get());
     }
 
     public function visitasDomiciliarias(Familia $familia): JsonResponse
     {
+        if ($response = $this->authorizeFamilyPermissions(request(), self::VIEW_PERMISSIONS)) {
+            return $response;
+        }
+
         return response()->json($familia->visitasDomiciliarias()->latest('id_visita_domiciliaria')->get());
     }
 
     public function registrosAsistencia(Familia $familia): JsonResponse
     {
+        if ($response = $this->authorizeFamilyPermissions(request(), self::VIEW_PERMISSIONS)) {
+            return $response;
+        }
+
         return response()->json($familia->registrosAsistencia()->latest('id_registro_asistencia')->get());
     }
 
     public function referente(Familia $familia): JsonResponse
     {
+        if ($response = $this->authorizeFamilyPermissions(request(), self::VIEW_PERMISSIONS)) {
+            return $response;
+        }
+
         return response()->json($familia->load('referente')->referente);
     }
 
     public function syncReferente(Request $request, Familia $familia): JsonResponse
     {
+        if ($response = $this->authorizeFamilyPermissions($request, self::MANAGE_PERMISSION)) {
+            return $response;
+        }
+
         $data = $request->validate([
             'integrante_id' => [
                 'required',
@@ -173,6 +225,10 @@ class FamiliaController extends Controller
 
     public function clearReferente(Familia $familia): JsonResponse
     {
+        if ($response = $this->authorizeFamilyPermissions(request(), self::MANAGE_PERMISSION)) {
+            return $response;
+        }
+
         DB::transaction(function () use ($familia): void {
             $familia->loadMissing('referente');
 
@@ -188,6 +244,10 @@ class FamiliaController extends Controller
 
     public function evaluarPrioridad(Request $request, Familia $familia): JsonResponse
     {
+        if ($response = $this->authorizeFamilyPermissions($request, self::MANAGE_PERMISSION)) {
+            return $response;
+        }
+
         $data = $request->validate([
             'puntaje_menores' => ['required', 'integer', 'in:0,1,2'],
             'puntaje_alimentacion' => ['required', 'integer', 'in:0,2,3'],
@@ -200,5 +260,26 @@ class FamiliaController extends Controller
         $familia = $service->evaluar($familia, $data, $request->user());
 
         return response()->json($familia);
+    }
+
+    private function authorizeFamilyPermissions(Request $request, array $requiredPermissions): ?JsonResponse
+    {
+        $usuario = $request->user();
+
+        if ($usuario === null) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
+        }
+
+        $usuario->loadMissing('rol.permisos');
+        $permissions = $usuario->rol?->permisos ?? collect();
+        $requiredPermissions = array_map('mb_strtolower', $requiredPermissions);
+
+        foreach ($permissions as $permiso) {
+            if (in_array(mb_strtolower($permiso->nombre), $requiredPermissions, true)) {
+                return null;
+            }
+        }
+
+        return response()->json(['message' => 'Acceso no autorizado. Falta el permiso: ' . implode(' o ', $requiredPermissions) . '.'], 403);
     }
 }

@@ -4,13 +4,10 @@ namespace Tests\Feature;
 
 use App\Models\Rol;
 use Database\Seeders\DatabaseSeeder;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class DatabaseSeederTest extends TestCase
 {
-    use RefreshDatabase;
-
     public function test_roles_receive_the_expected_permissions(): void
     {
         $this->app->make(DatabaseSeeder::class)->seedAccessControl();

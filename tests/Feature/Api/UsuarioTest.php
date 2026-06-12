@@ -3,16 +3,14 @@
 namespace Tests\Feature\Api;
 
 use App\Models\Familia;
+use App\Models\Permiso;
 use App\Models\Rol;
 use App\Models\VisitaDomiciliaria;
 use App\Models\Usuario;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class UsuarioTest extends TestCase
 {
-    use RefreshDatabase;
-
     public function test_usuarios_endpoint_requires_authentication(): void
     {
         $this->getJson('/api/usuarios')->assertUnauthorized();
@@ -20,16 +18,11 @@ class UsuarioTest extends TestCase
 
     public function test_authenticated_user_can_list_usuarios(): void
     {
-        $rol = Rol::factory()->create();
+        $rol = $this->rolConPermisos(['Ver usuarios']);
         Usuario::factory()->count(2)->create(['rol_id' => $rol->id_rol]);
 
         $user = Usuario::factory()->create(['rol_id' => $rol->id_rol]);
-        $token = $this->postJson('/api/auth/login', [
-            'email' => $user->email,
-            'password' => 'password',
-        ])->json('access_token');
-
-        $this->withHeader('Authorization', 'Bearer '.$token)
+        $this->actingAs($user, 'api')
             ->getJson('/api/usuarios')
             ->assertOk()
             ->assertJsonStructure(['data', 'links', 'meta']);
@@ -37,15 +30,10 @@ class UsuarioTest extends TestCase
 
     public function test_authenticated_user_can_create_usuario(): void
     {
-        $rol = Rol::factory()->create();
+        $rol = $this->rolConPermisos(['Gestionar usuarios']);
         $user = Usuario::factory()->create(['rol_id' => $rol->id_rol]);
 
-        $token = $this->postJson('/api/auth/login', [
-            'email' => $user->email,
-            'password' => 'password',
-        ])->json('access_token');
-
-        $this->withHeader('Authorization', 'Bearer '.$token)
+        $this->actingAs($user, 'api')
             ->postJson('/api/usuarios', [
                 'nombre' => 'Nuevo',
                 'apellido' => 'Usuario',
@@ -61,15 +49,10 @@ class UsuarioTest extends TestCase
 
     public function test_usuario_creation_returns_spanish_password_confirmation_error(): void
     {
-        $rol = Rol::factory()->create();
+        $rol = $this->rolConPermisos(['Gestionar usuarios']);
         $user = Usuario::factory()->create(['rol_id' => $rol->id_rol]);
 
-        $token = $this->postJson('/api/auth/login', [
-            'email' => $user->email,
-            'password' => 'password',
-        ])->json('access_token');
-
-        $this->withHeader('Authorization', 'Bearer '.$token)
+        $this->actingAs($user, 'api')
             ->postJson('/api/usuarios', [
                 'nombre' => 'Nuevo',
                 'apellido' => 'Usuario',
@@ -86,7 +69,7 @@ class UsuarioTest extends TestCase
 
     public function test_authenticated_user_can_delete_usuario(): void
     {
-        $rol = Rol::factory()->create();
+        $rol = $this->rolConPermisos(['Gestionar usuarios']);
         $user = Usuario::factory()->create(['rol_id' => $rol->id_rol]);
         $usuario = Usuario::factory()->create(['rol_id' => $rol->id_rol]);
 
@@ -101,7 +84,7 @@ class UsuarioTest extends TestCase
 
     public function test_usuario_endpoints_do_not_expose_password(): void
     {
-        $rol = Rol::factory()->create();
+        $rol = $this->rolConPermisos(['Ver usuarios']);
         $user = Usuario::factory()->create(['rol_id' => $rol->id_rol]);
         $usuario = Usuario::factory()->create(['rol_id' => $rol->id_rol]);
 
@@ -139,5 +122,58 @@ class UsuarioTest extends TestCase
             ->getJson('/api/visitas-domiciliarias/' . $visita->id_visita_domiciliaria . '/usuarios')
             ->assertOk()
             ->assertJsonMissingPath('0.contrasena');
+    }
+
+    public function test_usuario_endpoints_without_permissions_are_forbidden(): void
+    {
+        $rol = Rol::factory()->create();
+        $user = Usuario::factory()->create(['rol_id' => $rol->id_rol]);
+        $usuario = Usuario::factory()->create(['rol_id' => $rol->id_rol]);
+
+        $this->actingAs($user, 'api')
+            ->getJson('/api/usuarios')
+            ->assertForbidden();
+
+        $this->actingAs($user, 'api')
+            ->getJson('/api/usuarios/'.$usuario->id_usuario)
+            ->assertForbidden();
+
+        $this->actingAs($user, 'api')
+            ->postJson('/api/usuarios', [
+                'nombre' => 'Nuevo',
+                'apellido' => 'Usuario',
+                'email' => 'nuevo3@example.com',
+                'contrasena' => 'password',
+                'contrasena_confirmation' => 'password',
+                'activo' => true,
+                'rol_id' => $rol->id_rol,
+            ])
+            ->assertForbidden();
+
+        $this->actingAs($user, 'api')
+            ->deleteJson('/api/usuarios/'.$usuario->id_usuario)
+            ->assertForbidden();
+    }
+
+    private function rolConPermisos(array $permisos): Rol
+    {
+        $rol = Rol::factory()->create();
+        $ids = collect($permisos)->map(function (string $nombre): int {
+            return Permiso::query()->firstOrCreate([
+                'nombre' => $nombre,
+            ], [
+                'modulo' => match ($nombre) {
+                    'Gestionar usuarios', 'Ver usuarios' => 'usuarios',
+                    'Ver familias' => 'familias',
+                    'Poner asistencia' => 'asistencia',
+                    'Evaluar prioridad social' => 'priorizacion',
+                    default => 'usuarios',
+                },
+            ])->id_permiso;
+        });
+
+        $rol->permisos()->sync($ids->all());
+
+        return $rol;
     }
 }

@@ -6,13 +6,10 @@ use App\Models\Familia;
 use App\Models\Integrante;
 use App\Models\Rol;
 use App\Models\Usuario;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class FamiliaIntegrantesTest extends TestCase
 {
-    use RefreshDatabase;
-
     public function test_familia_integrantes_endpoint_returns_calculated_categoria_etaria(): void
     {
         $rol = Rol::factory()->create();

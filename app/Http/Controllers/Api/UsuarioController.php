@@ -15,6 +15,10 @@ class UsuarioController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
+        if ($response = $this->authorizeUserPermissions($request, ['Ver usuarios', 'Gestionar usuarios'])) {
+            return $response;
+        }
+
         $usuarios = Usuario::query()
             ->with('rol')
             ->latest('id_usuario')
@@ -25,6 +29,10 @@ class UsuarioController extends Controller
 
     public function store(StoreUsuarioRequest $request): JsonResponse
     {
+        if ($response = $this->authorizeUserPermissions($request, ['Gestionar usuarios'])) {
+            return $response;
+        }
+
         $usuario = Usuario::query()->create($request->validated());
 
         return (new UsuarioResource($usuario->load('rol')))
@@ -34,21 +42,55 @@ class UsuarioController extends Controller
 
     public function show(Usuario $usuario): JsonResponse
     {
+        if ($response = $this->authorizeUserPermissions(request(), ['Ver usuarios', 'Gestionar usuarios'])) {
+            return $response;
+        }
+
         return (new UsuarioResource($usuario->load('rol')))->response();
     }
 
     public function update(UpdateUsuarioRequest $request, Usuario $usuario): JsonResponse
     {
+        if ($response = $this->authorizeUserPermissions($request, ['Gestionar usuarios'])) {
+            return $response;
+        }
+
         $usuario->fill($request->validated());
         $usuario->save();
 
         return (new UsuarioResource($usuario->load('rol')))->response();
     }
 
-    public function destroy(Usuario $usuario): Response
+    public function destroy(Usuario $usuario): JsonResponse|Response
     {
+        if ($response = $this->authorizeUserPermissions(request(), ['Gestionar usuarios'])) {
+            return $response;
+        }
+
         $usuario->delete();
 
         return response()->noContent();
+    }
+
+    private function authorizeUserPermissions(Request $request, array $requiredPermissions): ?JsonResponse
+    {
+        $usuario = $request->user();
+
+        if ($usuario === null) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
+        }
+
+        $usuario->loadMissing('rol.permisos');
+
+        $permissions = $usuario->rol?->permisos ?? collect();
+        $requiredPermissions = array_map('mb_strtolower', $requiredPermissions);
+
+        foreach ($permissions as $permiso) {
+            if (in_array(mb_strtolower($permiso->nombre), $requiredPermissions, true)) {
+                return null;
+            }
+        }
+
+        return response()->json(['message' => 'Acceso no autorizado. Falta el permiso: ' . implode(' o ', $requiredPermissions) . '.'], 403);
     }
 }

@@ -14,6 +14,8 @@ class RegistroAsistenciaController extends Controller
 {
     use CrudController;
 
+    private const MANAGE_PERMISSION = ['Poner asistencia'];
+
     protected function modelClass(): string
     {
         return RegistroAsistencia::class;
@@ -51,6 +53,10 @@ class RegistroAsistenciaController extends Controller
 
     public function store(Request $request): JsonResponse
     {
+        if ($response = $this->authorizeAttendancePermissions($request, self::MANAGE_PERMISSION)) {
+            return $response;
+        }
+
         return $this->storeRecord($request);
     }
 
@@ -61,11 +67,40 @@ class RegistroAsistenciaController extends Controller
 
     public function update(Request $request, RegistroAsistencia $registroAsistencia): JsonResponse
     {
+        if ($response = $this->authorizeAttendancePermissions($request, self::MANAGE_PERMISSION)) {
+            return $response;
+        }
+
         return $this->updateRecord($request, $registroAsistencia);
     }
 
-    public function destroy(RegistroAsistencia $registroAsistencia): Response
+    public function destroy(RegistroAsistencia $registroAsistencia): JsonResponse|Response
     {
+        if ($response = $this->authorizeAttendancePermissions(request(), self::MANAGE_PERMISSION)) {
+            return $response;
+        }
+
         return $this->destroyRecord($registroAsistencia);
+    }
+
+    private function authorizeAttendancePermissions(Request $request, array $requiredPermissions): ?JsonResponse
+    {
+        $usuario = $request->user();
+
+        if ($usuario === null) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
+        }
+
+        $usuario->loadMissing('rol.permisos');
+        $permissions = $usuario->rol?->permisos ?? collect();
+        $requiredPermissions = array_map('mb_strtolower', $requiredPermissions);
+
+        foreach ($permissions as $permiso) {
+            if (in_array(mb_strtolower($permiso->nombre), $requiredPermissions, true)) {
+                return null;
+            }
+        }
+
+        return response()->json(['message' => 'Acceso no autorizado. Falta el permiso: ' . implode(' o ', $requiredPermissions) . '.'], 403);
     }
 }
