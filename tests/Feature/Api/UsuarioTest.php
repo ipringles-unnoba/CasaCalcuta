@@ -2,7 +2,9 @@
 
 namespace Tests\Feature\Api;
 
+use App\Models\Familia;
 use App\Models\Rol;
+use App\Models\VisitaDomiciliaria;
 use App\Models\Usuario;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -95,5 +97,47 @@ class UsuarioTest extends TestCase
         $this->assertDatabaseMissing('usuarios', [
             'id_usuario' => $usuario->id_usuario,
         ]);
+    }
+
+    public function test_usuario_endpoints_do_not_expose_password(): void
+    {
+        $rol = Rol::factory()->create();
+        $user = Usuario::factory()->create(['rol_id' => $rol->id_rol]);
+        $usuario = Usuario::factory()->create(['rol_id' => $rol->id_rol]);
+
+        $familia = Familia::query()->create([
+            'direccion' => 'Prueba 123',
+            'telefono' => '555-0000',
+            'puntaje_prioridad' => 0,
+            'prioridad_social' => 'BAJA',
+            'estado_lista' => 'PRINCIPAL',
+            'fecha_ingreso' => now()->toDateString(),
+            'activa' => true,
+            'registrado_por' => $user->id_usuario,
+        ]);
+
+        $visita = VisitaDomiciliaria::query()->create([
+            'fecha' => now()->toDateString(),
+            'observaciones' => 'Prueba',
+            'familia_id' => $familia->id_familia,
+        ]);
+
+        $visita->usuarios()->sync([$usuario->id_usuario]);
+
+        $this->actingAs($user, 'api')
+            ->getJson('/api/usuarios')
+            ->assertOk()
+            ->assertJsonMissingPath('data.0.contrasena')
+            ->assertJsonMissingPath('data.0.remember_token');
+
+        $this->actingAs($user, 'api')
+            ->getJson('/api/usuarios/' . $usuario->id_usuario)
+            ->assertOk()
+            ->assertJsonMissingPath('data.contrasena');
+
+        $this->actingAs($user, 'api')
+            ->getJson('/api/visitas-domiciliarias/' . $visita->id_visita_domiciliaria . '/usuarios')
+            ->assertOk()
+            ->assertJsonMissingPath('0.contrasena');
     }
 }
