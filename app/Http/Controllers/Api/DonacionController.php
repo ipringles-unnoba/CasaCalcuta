@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Api\Concerns\CrudController;
+use App\Http\Controllers\Api\Concerns\AuthenticatedRegistrar;
 use App\Http\Controllers\Controller;
 use App\Models\Donacion;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,7 @@ use Illuminate\Http\Response;
 
 class DonacionController extends Controller
 {
-    use CrudController;
+    use AuthenticatedRegistrar, CrudController;
 
     protected function modelClass(): string
     {
@@ -32,7 +33,7 @@ class DonacionController extends Controller
             'cantidad' => ['required', 'integer', 'min:1'],
             'unidad_medida' => ['required', 'string', 'max:255'],
             'fecha_recepcion' => ['required', 'date'],
-            'registrado_por' => ['required', 'integer', 'exists:usuarios,id_usuario'],
+            'registrado_por' => ['sometimes', 'integer', 'exists:usuarios,id_usuario'],
             'familia_id' => ['nullable', 'integer', 'exists:familias,id_familia'],
         ];
     }
@@ -45,7 +46,7 @@ class DonacionController extends Controller
             'cantidad' => ['sometimes', 'required', 'integer', 'min:1'],
             'unidad_medida' => ['sometimes', 'required', 'string', 'max:255'],
             'fecha_recepcion' => ['sometimes', 'required', 'date'],
-            'registrado_por' => ['sometimes', 'required', 'integer', 'exists:usuarios,id_usuario'],
+            'registrado_por' => ['sometimes', 'integer', 'exists:usuarios,id_usuario'],
             'familia_id' => ['nullable', 'integer', 'exists:familias,id_familia'],
         ];
     }
@@ -57,7 +58,16 @@ class DonacionController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        return $this->storeRecord($request);
+        $data = $request->validate($this->storeRules());
+        $data = $this->applyAuthenticatedRegistrar($request, $data);
+
+        if ($data instanceof JsonResponse) {
+            return $data;
+        }
+
+        $record = Donacion::query()->create($data);
+
+        return response()->json($record->load($this->relations()), 201);
     }
 
     public function show(Donacion $donacion): JsonResponse
@@ -67,7 +77,17 @@ class DonacionController extends Controller
 
     public function update(Request $request, Donacion $donacion): JsonResponse
     {
-        return $this->updateRecord($request, $donacion);
+        $data = $request->validate($this->updateRules($donacion));
+        $data = $this->applyAuthenticatedRegistrar($request, $data);
+
+        if ($data instanceof JsonResponse) {
+            return $data;
+        }
+
+        $donacion->fill($data);
+        $donacion->save();
+
+        return response()->json($donacion->load($this->relations()));
     }
 
     public function destroy(Donacion $donacion): Response

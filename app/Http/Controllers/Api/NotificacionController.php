@@ -42,7 +42,15 @@ class NotificacionController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        return $this->indexRecords($request);
+        $usuario = $request->user();
+
+        if ($usuario === null) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
+        }
+
+        return response()->json(
+            $usuario->notificaciones()->with('usuarios')->latest('id_notificacion')->paginate((int) $request->integer('per_page', 15))
+        );
     }
 
     public function store(Request $request): JsonResponse

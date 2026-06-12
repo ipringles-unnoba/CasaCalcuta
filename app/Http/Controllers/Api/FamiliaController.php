@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Api\Concerns\CrudController;
+use App\Http\Controllers\Api\Concerns\AuthenticatedRegistrar;
 use App\Http\Controllers\Controller;
 use App\Models\Integrante;
 use App\Models\Familia;
@@ -16,11 +17,13 @@ use Illuminate\Support\Facades\DB;
 
 class FamiliaController extends Controller
 {
-    use CrudController;
+    use AuthenticatedRegistrar, CrudController;
 
     private const VIEW_PERMISSIONS = ['Ver familias', 'Gestionar familias'];
 
     private const MANAGE_PERMISSION = ['Gestionar familias'];
+
+    private const LIST_PERMISSION = ['Gestionar listas'];
 
     protected function modelClass(): string
     {
@@ -42,7 +45,7 @@ class FamiliaController extends Controller
             'estado_lista' => ['required', 'string', 'max:255'],
             'fecha_ingreso' => ['required', 'date'],
             'activa' => ['required', 'boolean'],
-            'registrado_por' => ['required', 'integer', 'exists:usuarios,id_usuario'],
+            'registrado_por' => ['sometimes', 'integer', 'exists:usuarios,id_usuario'],
         ];
     }
 
@@ -56,7 +59,7 @@ class FamiliaController extends Controller
             'estado_lista' => ['sometimes', 'required', 'string', 'max:255'],
             'fecha_ingreso' => ['sometimes', 'required', 'date'],
             'activa' => ['sometimes', 'required', 'boolean'],
-            'registrado_por' => ['sometimes', 'required', 'integer', 'exists:usuarios,id_usuario'],
+            'registrado_por' => ['sometimes', 'integer', 'exists:usuarios,id_usuario'],
             'referente_id' => [
                 'sometimes',
                 'nullable',
@@ -109,7 +112,16 @@ class FamiliaController extends Controller
             return $response;
         }
 
-        return $this->storeRecord($request);
+        $data = $request->validate($this->storeRules());
+        $data = $this->applyAuthenticatedRegistrar($request, $data);
+
+        if ($data instanceof JsonResponse) {
+            return $data;
+        }
+
+        $familia = Familia::query()->create($data);
+
+        return response()->json($familia->load($this->relations()), 201);
     }
 
     public function show(Familia $familia): JsonResponse
@@ -123,11 +135,29 @@ class FamiliaController extends Controller
 
     public function update(Request $request, Familia $familia): JsonResponse
     {
-        if ($response = $this->authorizeFamilyPermissions($request, self::MANAGE_PERMISSION)) {
+        $validated = $request->validate($this->updateRules($familia));
+        $validated = $this->applyAuthenticatedRegistrar($request, $validated);
+
+        if ($validated instanceof JsonResponse) {
+            return $validated;
+        }
+
+        if (array_key_exists('estado_lista', $validated)) {
+            if ($response = $this->authorizeFamilyPermissions($request, self::LIST_PERMISSION)) {
+                return $response;
+            }
+        }
+
+        $otherFields = array_diff_key($validated, array_flip(['estado_lista']));
+
+        if ($otherFields !== [] && $response = $this->authorizeFamilyPermissions($request, self::MANAGE_PERMISSION)) {
             return $response;
         }
 
-        return $this->updateRecord($request, $familia);
+        $familia->fill($validated);
+        $familia->save();
+
+        return response()->json($familia->load($this->relations()));
     }
 
     public function destroy(Familia $familia): JsonResponse|Response
