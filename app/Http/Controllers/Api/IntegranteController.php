@@ -69,8 +69,6 @@ class IntegranteController extends Controller
             return $integrante;
         });
 
-        $this->recalcularPuntajeMenoresFamilia($integrante->familia_id);
-
         return response()->json($integrante->load($this->relations()), 201);
     }
 
@@ -91,21 +89,14 @@ class IntegranteController extends Controller
             $this->syncFamiliaReferente($integrante, $originalFamiliaId);
         });
 
-        $this->recalcularPuntajeMenoresFamilia($originalFamiliaId);
-        $this->recalcularPuntajeMenoresFamilia($integrante->familia_id);
-
         return response()->json($integrante->load($this->relations()));
     }
 
     public function destroy(Integrante $integrante): Response
     {
-        $familiaId = $integrante->familia_id;
-
         DB::transaction(function () use ($integrante): void {
             $integrante->delete();
         });
-
-        $this->recalcularPuntajeMenoresFamilia($familiaId);
 
         return response()->noContent();
     }
@@ -150,18 +141,4 @@ class IntegranteController extends Controller
         }
     }
 
-    protected function recalcularPuntajeMenoresFamilia(?int $familiaId): void
-    {
-        if ($familiaId === null) {
-            return;
-        }
-
-        $familia = Familia::query()->find($familiaId);
-
-        if ($familia === null) {
-            return;
-        }
-
-        $familia->recalcular_puntaje_menores();
-    }
 }

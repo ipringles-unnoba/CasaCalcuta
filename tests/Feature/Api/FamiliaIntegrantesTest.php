@@ -54,8 +54,8 @@ class FamiliaIntegrantesTest extends TestCase
         $this->actingAs($user, 'api')
             ->getJson('/api/familias/' . $familia->id_familia . '/integrantes')
             ->assertOk()
-            ->assertJsonFragment(['nombre' => 'Menor', 'categoria_etaria' => 'Menor de edad'])
-            ->assertJsonFragment(['nombre' => 'Adulto', 'categoria_etaria' => 'Adulto']);
+            ->assertJsonFragment(['nombre' => 'Menor', 'categoria_etaria' => 'MENOR'])
+            ->assertJsonFragment(['nombre' => 'Adulto', 'categoria_etaria' => 'ADULTO']);
 
         $this->assertDatabaseHas('familias', [
             'id_familia' => $familia->id_familia,

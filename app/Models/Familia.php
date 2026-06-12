@@ -79,7 +79,7 @@ class Familia extends Model
     {
         $puntajeMenores = $this->integrantes()
             ->get()
-            ->filter(fn (Integrante $integrante): bool => $integrante->categoria_etaria === 'Menor de edad')
+            ->filter(fn (Integrante $integrante): bool => $integrante->categoria_etaria === 'MENOR')
             ->count();
 
         $this->forceFill(['puntaje_menores' => $puntajeMenores])->save();

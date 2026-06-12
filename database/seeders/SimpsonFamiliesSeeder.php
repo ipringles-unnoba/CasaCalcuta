@@ -29,9 +29,9 @@ class SimpsonFamiliesSeeder extends Seeder
                 'integrantes' => [
                     ['nombre' => 'Homer', 'apellido' => 'Simpson', 'fecha_nacimiento' => '1956-05-12', 'tipo_documento' => 'DNI', 'numero_documento' => 'SIM-001', 'referente' => true],
                     ['nombre' => 'Marge', 'apellido' => 'Simpson', 'fecha_nacimiento' => '1956-03-19', 'tipo_documento' => 'DNI', 'numero_documento' => 'SIM-002', 'referente' => false],
-                    ['nombre' => 'Bart', 'apellido' => 'Simpson', 'fecha_nacimiento' => '1980-04-01', 'tipo_documento' => 'DNI', 'numero_documento' => 'SIM-003', 'referente' => false],
-                    ['nombre' => 'Lisa', 'apellido' => 'Simpson', 'fecha_nacimiento' => '1982-05-09', 'tipo_documento' => 'DNI', 'numero_documento' => 'SIM-004', 'referente' => false],
-                    ['nombre' => 'Maggie', 'apellido' => 'Simpson', 'fecha_nacimiento' => '1988-01-12', 'tipo_documento' => 'DNI', 'numero_documento' => 'SIM-005', 'referente' => false],
+                    ['nombre' => 'Bart', 'apellido' => 'Simpson', 'fecha_nacimiento' => '2010-04-01', 'tipo_documento' => 'DNI', 'numero_documento' => 'SIM-003', 'referente' => false],
+                    ['nombre' => 'Lisa', 'apellido' => 'Simpson', 'fecha_nacimiento' => '2012-05-09', 'tipo_documento' => 'DNI', 'numero_documento' => 'SIM-004', 'referente' => false],
+                    ['nombre' => 'Maggie', 'apellido' => 'Simpson', 'fecha_nacimiento' => '2018-01-12', 'tipo_documento' => 'DNI', 'numero_documento' => 'SIM-005', 'referente' => false],
                 ],
             ],
             [
@@ -44,8 +44,8 @@ class SimpsonFamiliesSeeder extends Seeder
                 'activa' => true,
                 'integrantes' => [
                     ['nombre' => 'Ned', 'apellido' => 'Flanders', 'fecha_nacimiento' => '1959-02-01', 'tipo_documento' => 'DNI', 'numero_documento' => 'FLA-001', 'referente' => true],
-                    ['nombre' => 'Rod', 'apellido' => 'Flanders', 'fecha_nacimiento' => '1985-07-07', 'tipo_documento' => 'DNI', 'numero_documento' => 'FLA-002', 'referente' => false],
-                    ['nombre' => 'Todd', 'apellido' => 'Flanders', 'fecha_nacimiento' => '1987-09-15', 'tipo_documento' => 'DNI', 'numero_documento' => 'FLA-003', 'referente' => false],
+                    ['nombre' => 'Rod', 'apellido' => 'Flanders', 'fecha_nacimiento' => '2011-07-07', 'tipo_documento' => 'DNI', 'numero_documento' => 'FLA-002', 'referente' => false],
+                    ['nombre' => 'Todd', 'apellido' => 'Flanders', 'fecha_nacimiento' => '2013-09-15', 'tipo_documento' => 'DNI', 'numero_documento' => 'FLA-003', 'referente' => false],
                 ],
             ],
             [
@@ -59,7 +59,7 @@ class SimpsonFamiliesSeeder extends Seeder
                 'integrantes' => [
                     ['nombre' => 'Kirk', 'apellido' => 'Van Houten', 'fecha_nacimiento' => '1959-08-01', 'tipo_documento' => 'DNI', 'numero_documento' => 'VAN-001', 'referente' => true],
                     ['nombre' => 'Luann', 'apellido' => 'Van Houten', 'fecha_nacimiento' => '1960-10-15', 'tipo_documento' => 'DNI', 'numero_documento' => 'VAN-002', 'referente' => false],
-                    ['nombre' => 'Milhouse', 'apellido' => 'Van Houten', 'fecha_nacimiento' => '1980-02-20', 'tipo_documento' => 'DNI', 'numero_documento' => 'VAN-003', 'referente' => false],
+                    ['nombre' => 'Milhouse', 'apellido' => 'Van Houten', 'fecha_nacimiento' => '2011-02-20', 'tipo_documento' => 'DNI', 'numero_documento' => 'VAN-003', 'referente' => false],
                 ],
             ],
             [
@@ -73,7 +73,7 @@ class SimpsonFamiliesSeeder extends Seeder
                 'integrantes' => [
                     ['nombre' => 'Clancy', 'apellido' => 'Wiggum', 'fecha_nacimiento' => '1954-01-21', 'tipo_documento' => 'DNI', 'numero_documento' => 'WIG-001', 'referente' => true],
                     ['nombre' => 'Sarah', 'apellido' => 'Wiggum', 'fecha_nacimiento' => '1956-11-02', 'tipo_documento' => 'DNI', 'numero_documento' => 'WIG-002', 'referente' => false],
-                    ['nombre' => 'Ralph', 'apellido' => 'Wiggum', 'fecha_nacimiento' => '1980-02-28', 'tipo_documento' => 'DNI', 'numero_documento' => 'WIG-003', 'referente' => false],
+                    ['nombre' => 'Ralph', 'apellido' => 'Wiggum', 'fecha_nacimiento' => '2012-02-28', 'tipo_documento' => 'DNI', 'numero_documento' => 'WIG-003', 'referente' => false],
                 ],
             ],
             [

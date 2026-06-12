@@ -21,6 +21,8 @@ class Integrante extends Model
 
     protected $appends = ['categoria_etaria'];
 
+    protected ?int $familiaIdOriginal = null;
+
     protected $table = 'integrantes';
 
     protected $primaryKey = 'id_integrante';
@@ -41,9 +43,56 @@ class Integrante extends Model
                     return null;
                 }
 
-                return $this->fecha_nacimiento->age < 18 ? 'Menor de edad' : 'Adulto';
+                return $this->fecha_nacimiento->age < 18 ? 'MENOR' : 'ADULTO';
             },
         );
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (Integrante $integrante): void {
+            $integrante->familiaIdOriginal = $integrante->familia_id;
+        });
+
+        static::updating(function (Integrante $integrante): void {
+            if ($integrante->isDirty('familia_id')) {
+                $integrante->familiaIdOriginal = $integrante->getOriginal('familia_id');
+            }
+        });
+
+        static::created(function (Integrante $integrante): void {
+            $integrante->recalcularFamiliasRelacionadas();
+        });
+
+        static::updated(function (Integrante $integrante): void {
+            if (! $integrante->wasChanged(['fecha_nacimiento', 'familia_id'])) {
+                return;
+            }
+
+            $integrante->recalcularFamiliasRelacionadas();
+        });
+
+        static::deleted(function (Integrante $integrante): void {
+            $integrante->recalcularFamiliasRelacionadas();
+        });
+    }
+
+    protected function recalcularFamiliasRelacionadas(): void
+    {
+        $familiaIds = array_values(array_unique(array_filter([
+            $this->familiaIdOriginal,
+            $this->familia_id,
+        ])));
+
+        foreach ($familiaIds as $familiaId) {
+            $familia = Familia::query()->find($familiaId);
+
+            if ($familia !== null) {
+                $familia->recalcular_puntaje_menores();
+            }
+        }
+
+        $this->familiaIdOriginal = null;
     }
 
     public function familia(): BelongsTo
