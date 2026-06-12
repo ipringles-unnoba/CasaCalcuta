@@ -74,4 +74,16 @@ class Familia extends Model
     {
         return $this->hasMany(RegistroAsistencia::class, 'familia_id', 'id_familia');
     }
+
+    public function recalcular_puntaje_menores(): self
+    {
+        $puntajeMenores = $this->integrantes()
+            ->get()
+            ->filter(fn (Integrante $integrante): bool => $integrante->categoria_etaria === 'MENOR')
+            ->count();
+
+        $this->forceFill(['puntaje_menores' => $puntajeMenores])->save();
+
+        return $this->refresh();
+    }
 }

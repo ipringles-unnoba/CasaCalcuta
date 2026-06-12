@@ -35,7 +35,6 @@ class IntegranteController extends Controller
             'fecha_nacimiento' => ['required', 'date'],
             'tipo_documento' => ['required', 'string', 'max:255'],
             'numero_documento' => ['required', 'string', 'max:255', Rule::unique('integrantes', 'numero_documento')],
-            'categoria_etaria' => ['required', 'string', 'max:255'],
             'referente' => ['required', 'boolean'],
             'familia_id' => ['required', 'integer', 'exists:familias,id_familia'],
         ];
@@ -49,7 +48,6 @@ class IntegranteController extends Controller
             'fecha_nacimiento' => ['sometimes', 'required', 'date'],
             'tipo_documento' => ['sometimes', 'required', 'string', 'max:255'],
             'numero_documento' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('integrantes', 'numero_documento')->ignore($record->getKey(), 'id_integrante')],
-            'categoria_etaria' => ['sometimes', 'required', 'string', 'max:255'],
             'referente' => ['sometimes', 'required', 'boolean'],
             'familia_id' => ['sometimes', 'required', 'integer', 'exists:familias,id_familia'],
         ];
@@ -96,7 +94,11 @@ class IntegranteController extends Controller
 
     public function destroy(Integrante $integrante): Response
     {
-        return $this->destroyRecord($integrante);
+        DB::transaction(function () use ($integrante): void {
+            $integrante->delete();
+        });
+
+        return response()->noContent();
     }
 
     public function documentos(Integrante $integrante): JsonResponse
@@ -138,4 +140,5 @@ class IntegranteController extends Controller
             $familia->forceFill(['referente_id' => null])->save();
         }
     }
+
 }
