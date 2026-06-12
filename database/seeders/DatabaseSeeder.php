@@ -15,6 +15,14 @@ class DatabaseSeeder extends Seeder
 
     public function run(): void
     {
+        $this->seedAccessControl();
+
+        $this->call(SimpsonFamiliesSeeder::class);
+        $this->call(SessionDataSeeder::class);
+    }
+
+    public function seedAccessControl(): void
+    {
         $roles = collect([
             Rol::query()->firstOrCreate(
                 ['nombre' => 'Administrador'],
@@ -22,15 +30,15 @@ class DatabaseSeeder extends Seeder
             ),
             Rol::query()->firstOrCreate(
                 ['nombre' => 'Coordinador'],
-                ['descripcion' => 'Responsable de la gestión de familias y listas. Autoriza el paso de lista de espera a principal y gestiona las alertas de ausentismo.']
+                ['descripcion' => 'Responsable de la gestión de familias y listas.']
             ),
             Rol::query()->firstOrCreate(
-                ['nombre' => 'Operador'],
-                ['descripcion' => 'Rol para tareas operativas']
+                ['nombre' => 'Encargado'],
+                ['descripcion' => 'Rol operativo con acceso a usuarios, familias, asistencia y evaluacion de prioridad social.']
             ),
             Rol::query()->firstOrCreate(
-                ['nombre' => 'Consulta'],
-                ['descripcion' => 'Rol con acceso de solo lectura']
+                ['nombre' => 'Ayudante'],
+                ['descripcion' => 'Rol con acceso de solo lectura sobre familias.']
             ),
         ]);
 
@@ -38,6 +46,22 @@ class DatabaseSeeder extends Seeder
             Permiso::query()->firstOrCreate(
                 ['nombre' => 'Gestionar usuarios'],
                 ['modulo' => 'usuarios']
+            ),
+            Permiso::query()->firstOrCreate(
+                ['nombre' => 'Ver usuarios'],
+                ['modulo' => 'usuarios']
+            ),
+            Permiso::query()->firstOrCreate(
+                ['nombre' => 'Ver familias'],
+                ['modulo' => 'familias']
+            ),
+            Permiso::query()->firstOrCreate(
+                ['nombre' => 'Poner asistencia'],
+                ['modulo' => 'asistencia']
+            ),
+            Permiso::query()->firstOrCreate(
+                ['nombre' => 'Evaluar prioridad social'],
+                ['modulo' => 'priorizacion']
             ),
             Permiso::query()->firstOrCreate(
                 ['nombre' => 'Gestionar roles'],
@@ -50,14 +74,6 @@ class DatabaseSeeder extends Seeder
             Permiso::query()->firstOrCreate(
                 ['nombre' => 'Gestionar notificaciones'],
                 ['modulo' => 'notificaciones']
-            ),
-            Permiso::query()->firstOrCreate(
-                ['nombre' => 'Ver usuarios'],
-                ['modulo' => 'usuarios']
-            ),
-            Permiso::query()->firstOrCreate(
-                ['nombre' => 'Evaluar prioridad social'],
-                ['modulo' => 'priorizacion']
             ),
             Permiso::query()->firstOrCreate(
                 ['nombre' => 'Gestionar listas'],
@@ -80,15 +96,15 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'email' => 'operador@example.com',
-                'nombre' => 'Operador',
+                'nombre' => 'Encargado',
                 'apellido' => 'CasaCalcuta',
-                'rol' => 'Operador',
+                'rol' => 'Encargado',
             ],
             [
                 'email' => 'consulta@example.com',
-                'nombre' => 'Consulta',
+                'nombre' => 'Ayudante',
                 'apellido' => 'CasaCalcuta',
-                'rol' => 'Consulta',
+                'rol' => 'Ayudante',
             ],
         ];
 
@@ -109,24 +125,23 @@ class DatabaseSeeder extends Seeder
 
         $administrador = $roles->firstWhere('nombre', 'Administrador');
         $coordinador = $roles->firstWhere('nombre', 'Coordinador');
+        $encargado = $roles->firstWhere('nombre', 'Encargado');
+        $ayudante = $roles->firstWhere('nombre', 'Ayudante');
 
-        $administrador?->permisos()->syncWithoutDetaching($permisos->pluck('id_permiso'));
-        $coordinador?->permisos()->syncWithoutDetaching(
+        $administrador?->permisos()->sync($permisos->pluck('id_permiso'));
+        $coordinador?->permisos()->sync(
+            $permisos->whereNotIn('nombre', ['Gestionar roles', 'Gestionar permisos'])->pluck('id_permiso')
+        );
+        $encargado?->permisos()->sync(
             $permisos->whereIn('nombre', [
-                'Evaluar prioridad social',
-                'Gestionar listas',
-                'Gestionar notificaciones',
                 'Ver usuarios',
+                'Ver familias',
+                'Poner asistencia',
+                'Evaluar prioridad social',
             ])->pluck('id_permiso')
         );
-        $roles->firstWhere('nombre', 'Operador')?->permisos()->syncWithoutDetaching(
-            $permisos->whereIn('nombre', ['Gestionar notificaciones', 'Ver usuarios'])->pluck('id_permiso')
+        $ayudante?->permisos()->sync(
+            $permisos->whereIn('nombre', ['Ver familias'])->pluck('id_permiso')
         );
-        $roles->firstWhere('nombre', 'Consulta')?->permisos()->syncWithoutDetaching(
-            $permisos->where('nombre', 'Ver usuarios')->pluck('id_permiso')
-        );
-
-        $this->call(SimpsonFamiliesSeeder::class);
-        $this->call(SessionDataSeeder::class);
     }
 }

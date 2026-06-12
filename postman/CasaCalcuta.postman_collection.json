@@ -1,19 +1,10 @@
 {
   "info": {
-    "_postman_id": "7f24a0aa-7b6c-49c5-a29f-0d4b4e43d5d3",
+    "_postman_id": "c77f202c-8143-4bdf-b8a1-8152635b9bc2",
     "name": "CasaCalcuta API",
     "description": "Colección del backend API de CasaCalcuta.\n\n## Flujo\n\n1. Ejecutar `auth/login`.\n2. Usar `access_token` para los endpoints protegidos.\n3. Crear primero entidades base (`usuarios`, `familias`, `comisiones`, etc.) y luego sus relaciones.\n\n## Variables\n\nUsar `{{base_url}}` y los ids de entorno para probar los endpoints.\n\n## Notas\n\n- La API responde JSON.\n- `contrasena` se envía en texto plano y Laravel la hashea.\n- Los endpoints protegidos usan `Bearer {{access_token}}`.\n- `auditorias` es solo lectura.",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "auth": {
-    "type": "bearer",
-    "bearer": [
-      {
-        "key": "token",
-        "value": "{{access_token}}",
-        "type": "string"
-      }
-    ]
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "3612062"
   },
   "item": [
     {
@@ -21,22 +12,6 @@
       "item": [
         {
           "name": "Login",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/auth/login",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "login"]
-            }
-          },
           "event": [
             {
               "listen": "test",
@@ -51,43 +26,108 @@
                 ]
               }
             }
-          ]
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
         },
         {
           "name": "Me",
           "request": {
             "method": "GET",
-            "header": [{ "key": "Accept", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
             "url": {
               "raw": "{{base_url}}/api/auth/me",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "me"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Refresh",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Accept", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
             "url": {
               "raw": "{{base_url}}/api/auth/refresh",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "refresh"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "refresh"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Logout",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Accept", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
             "url": {
               "raw": "{{base_url}}/api/auth/logout",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "logout"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
             }
-          }
+          },
+          "response": []
         }
       ]
     },
@@ -98,305 +138,2805 @@
           "name": "Listar",
           "request": {
             "method": "GET",
-            "header": [{ "key": "Accept", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
             "url": {
               "raw": "{{base_url}}/api/usuarios?per_page=15",
-              "host": ["{{base_url}}"],
-              "path": ["api", "usuarios"],
-              "query": [{ "key": "per_page", "value": "15" }]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "usuarios"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "15"
+                }
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Obtener",
           "request": {
             "method": "GET",
-            "header": [{ "key": "Accept", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
             "url": {
               "raw": "{{base_url}}/api/usuarios/{{usuario_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["api", "usuarios", "{{usuario_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "usuarios",
+                "{{usuario_id}}"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Crear",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Admin\",\n  \"apellido\": \"Sistema\",\n  \"email\": \"admin@example.com\",\n  \"contrasena\": \"password\",\n  \"contrasena_confirmation\": \"password\",\n  \"activo\": true,\n  \"rol_id\": {{rol_id}}\n}" },
-            "url": { "raw": "{{base_url}}/api/usuarios", "host": ["{{base_url}}"], "path": ["api", "usuarios"] }
-          }
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Admin\",\n  \"apellido\": \"Sistema\",\n  \"email\": \"admin@example.com\",\n  \"contrasena\": \"password\",\n  \"contrasena_confirmation\": \"password\",\n  \"activo\": true,\n  \"rol_id\": {{rol_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/usuarios",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "usuarios"
+              ]
+            }
+          },
+          "response": []
         },
         {
           "name": "Actualizar",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Admin\",\n  \"apellido\": \"Sistema\",\n  \"email\": \"admin@example.com\",\n  \"contrasena\": \"password\",\n  \"contrasena_confirmation\": \"password\",\n  \"activo\": true,\n  \"rol_id\": {{rol_id}}\n}" },
-            "url": { "raw": "{{base_url}}/api/usuarios/{{usuario_id}}", "host": ["{{base_url}}"], "path": ["api", "usuarios", "{{usuario_id}}"] }
-          }
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Admin\",\n  \"apellido\": \"Sistema\",\n  \"email\": \"admin@example.com\",\n  \"contrasena\": \"password\",\n  \"contrasena_confirmation\": \"password\",\n  \"activo\": true,\n  \"rol_id\": {{rol_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/usuarios/{{usuario_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "usuarios",
+                "{{usuario_id}}"
+              ]
+            }
+          },
+          "response": []
         },
         {
           "name": "Eliminar",
           "request": {
             "method": "DELETE",
-            "header": [{ "key": "Accept", "value": "application/json" }],
-            "url": { "raw": "{{base_url}}/api/usuarios/{{usuario_id}}", "host": ["{{base_url}}"], "path": ["api", "usuarios", "{{usuario_id}}"] }
-          }
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/usuarios/{{usuario_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "usuarios",
+                "{{usuario_id}}"
+              ]
+            }
+          },
+          "response": []
         },
         {
           "name": "Notificaciones",
           "request": {
             "method": "GET",
-            "header": [{ "key": "Accept", "value": "application/json" }],
-            "url": { "raw": "{{base_url}}/api/usuarios/{{usuario_id}}/notificaciones", "host": ["{{base_url}}"], "path": ["api", "usuarios", "{{usuario_id}}", "notificaciones"] }
-          }
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/usuarios/{{usuario_id}}/notificaciones",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "usuarios",
+                "{{usuario_id}}",
+                "notificaciones"
+              ]
+            }
+          },
+          "response": []
         },
         {
           "name": "Sync notificaciones",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"notificaciones\": [{{notificacion_id}}]\n}" },
-            "url": { "raw": "{{base_url}}/api/usuarios/{{usuario_id}}/notificaciones/sync", "host": ["{{base_url}}"], "path": ["api", "usuarios", "{{usuario_id}}", "notificaciones", "sync"] }
-          }
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notificaciones\": [{{notificacion_id}}]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/usuarios/{{usuario_id}}/notificaciones/sync",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "usuarios",
+                "{{usuario_id}}",
+                "notificaciones",
+                "sync"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
     {
       "name": "roles",
       "item": [
-        { "name": "Listar", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/roles?per_page=15", "host": ["{{base_url}}"], "path": ["api", "roles"], "query": [{ "key": "per_page", "value": "15" }] } } },
-        { "name": "Obtener", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/roles/{{rol_id}}", "host": ["{{base_url}}"], "path": ["api", "roles", "{{rol_id}}"] } } },
-        { "name": "Crear", "request": { "method": "POST", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Nuevo rol\",\n  \"descripcion\": \"Rol de ejemplo\"\n}" }, "url": { "raw": "{{base_url}}/api/roles", "host": ["{{base_url}}"], "path": ["api", "roles"] } } },
-        { "name": "Actualizar", "request": { "method": "PUT", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Nuevo rol\",\n  \"descripcion\": \"Rol de ejemplo\"\n}" }, "url": { "raw": "{{base_url}}/api/roles/{{rol_id}}", "host": ["{{base_url}}"], "path": ["api", "roles", "{{rol_id}}"] } } },
-        { "name": "Eliminar", "request": { "method": "DELETE", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/roles/{{rol_id}}", "host": ["{{base_url}}"], "path": ["api", "roles", "{{rol_id}}"] } } },
-        { "name": "Permisos", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/roles/{{rol_id}}/permisos", "host": ["{{base_url}}"], "path": ["api", "roles", "{{rol_id}}", "permisos"] } } },
-        { "name": "Sync permisos", "request": { "method": "POST", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"permisos\": [{{permiso_id}}]\n}" }, "url": { "raw": "{{base_url}}/api/roles/{{rol_id}}/permisos/sync", "host": ["{{base_url}}"], "path": ["api", "roles", "{{rol_id}}", "permisos", "sync"] } } }
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/roles?per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "roles"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "15"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/roles/{{rol_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "roles",
+                "{{rol_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Nuevo rol\",\n  \"descripcion\": \"Rol de ejemplo\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/roles",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "roles"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Nuevo rol\",\n  \"descripcion\": \"Rol de ejemplo\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/roles/{{rol_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "roles",
+                "{{rol_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/roles/{{rol_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "roles",
+                "{{rol_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Permisos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/roles/{{rol_id}}/permisos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "roles",
+                "{{rol_id}}",
+                "permisos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sync permisos",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"permisos\": [{{permiso_id}}]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/roles/{{rol_id}}/permisos/sync",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "roles",
+                "{{rol_id}}",
+                "permisos",
+                "sync"
+              ]
+            }
+          },
+          "response": []
+        }
       ]
     },
     {
       "name": "permisos",
       "item": [
-        { "name": "Listar", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/permisos?per_page=15", "host": ["{{base_url}}"], "path": ["api", "permisos"], "query": [{ "key": "per_page", "value": "15" }] } } },
-        { "name": "Obtener", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/permisos/{{permiso_id}}", "host": ["{{base_url}}"], "path": ["api", "permisos", "{{permiso_id}}"] } } },
-        { "name": "Crear", "request": { "method": "POST", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Gestionar ejemplo\",\n  \"modulo\": \"ejemplo\"\n}" }, "url": { "raw": "{{base_url}}/api/permisos", "host": ["{{base_url}}"], "path": ["api", "permisos"] } } },
-        { "name": "Actualizar", "request": { "method": "PUT", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Gestionar ejemplo\",\n  \"modulo\": \"ejemplo\"\n}" }, "url": { "raw": "{{base_url}}/api/permisos/{{permiso_id}}", "host": ["{{base_url}}"], "path": ["api", "permisos", "{{permiso_id}}"] } } },
-        { "name": "Eliminar", "request": { "method": "DELETE", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/permisos/{{permiso_id}}", "host": ["{{base_url}}"], "path": ["api", "permisos", "{{permiso_id}}"] } } }
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/permisos?per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "permisos"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "15"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/permisos/{{permiso_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "permisos",
+                "{{permiso_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Gestionar ejemplo\",\n  \"modulo\": \"ejemplo\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/permisos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "permisos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Gestionar ejemplo\",\n  \"modulo\": \"ejemplo\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/permisos/{{permiso_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "permisos",
+                "{{permiso_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/permisos/{{permiso_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "permisos",
+                "{{permiso_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
       ]
     },
     {
       "name": "notificaciones",
       "item": [
-        { "name": "Listar", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/notificaciones?per_page=15", "host": ["{{base_url}}"], "path": ["api", "notificaciones"], "query": [{ "key": "per_page", "value": "15" }] } } },
-        { "name": "Obtener", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/notificaciones/{{notificacion_id}}", "host": ["{{base_url}}"], "path": ["api", "notificaciones", "{{notificacion_id}}"] } } },
-        { "name": "Crear", "request": { "method": "POST", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"fecha\": \"2026-06-04\",\n  \"motivo\": \"Notificacion de ejemplo\"\n}" }, "url": { "raw": "{{base_url}}/api/notificaciones", "host": ["{{base_url}}"], "path": ["api", "notificaciones"] } } },
-        { "name": "Actualizar", "request": { "method": "PUT", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"fecha\": \"2026-06-04\",\n  \"motivo\": \"Notificacion de ejemplo\"\n}" }, "url": { "raw": "{{base_url}}/api/notificaciones/{{notificacion_id}}", "host": ["{{base_url}}"], "path": ["api", "notificaciones", "{{notificacion_id}}"] } } },
-        { "name": "Eliminar", "request": { "method": "DELETE", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/notificaciones/{{notificacion_id}}", "host": ["{{base_url}}"], "path": ["api", "notificaciones", "{{notificacion_id}}"] } } }
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/notificaciones?per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "notificaciones"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "15"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/notificaciones/{{notificacion_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "notificaciones",
+                "{{notificacion_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fecha\": \"2026-06-04\",\n  \"motivo\": \"Notificacion de ejemplo\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/notificaciones",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "notificaciones"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fecha\": \"2026-06-04\",\n  \"motivo\": \"Notificacion de ejemplo\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/notificaciones/{{notificacion_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "notificaciones",
+                "{{notificacion_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/notificaciones/{{notificacion_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "notificaciones",
+                "{{notificacion_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
       ]
     },
     {
       "name": "familias",
       "item": [
-        { "name": "Listar", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/familias?per_page=15", "host": ["{{base_url}}"], "path": ["api", "familias"], "query": [{ "key": "per_page", "value": "15" }] } } },
-        { "name": "Obtener", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/familias/{{familia_id}}", "host": ["{{base_url}}"], "path": ["api", "familias", "{{familia_id}}"] } } },
-        { "name": "Crear", "request": { "method": "POST", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"direccion\": \"Direccion de ejemplo\",\n  \"telefono\": \"123456\",\n  \"puntaje_prioridad\": 10,\n  \"prioridad_social\": \"ALTA\",\n  \"estado_lista\": \"PRINCIPAL\",\n  \"fecha_ingreso\": \"2026-06-04\",\n  \"activa\": true,\n  \"registrado_por\": {{usuario_id}}\n}" }, "url": { "raw": "{{base_url}}/api/familias", "host": ["{{base_url}}"], "path": ["api", "familias"] } } },
-        { "name": "Actualizar", "request": { "method": "PUT", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"direccion\": \"Direccion de ejemplo\",\n  \"telefono\": \"123456\",\n  \"puntaje_prioridad\": 10,\n  \"prioridad_social\": \"ALTA\",\n  \"estado_lista\": \"PRINCIPAL\",\n  \"fecha_ingreso\": \"2026-06-04\",\n  \"activa\": true,\n  \"registrado_por\": {{usuario_id}}\n}" }, "url": { "raw": "{{base_url}}/api/familias/{{familia_id}}", "host": ["{{base_url}}"], "path": ["api", "familias", "{{familia_id}}"] } } },
-        { "name": "Eliminar", "request": { "method": "DELETE", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/familias/{{familia_id}}", "host": ["{{base_url}}"], "path": ["api", "familias", "{{familia_id}}"] } } },
-        { "name": "Referente", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/familias/{{familia_id}}/referente", "host": ["{{base_url}}"], "path": ["api", "familias", "{{familia_id}}", "referente"] } } },
-        { "name": "Asignar referente", "request": { "method": "PUT", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"integrante_id\": {{integrante_id}}\n}" }, "url": { "raw": "{{base_url}}/api/familias/{{familia_id}}/referente", "host": ["{{base_url}}"], "path": ["api", "familias", "{{familia_id}}", "referente"] } } },
-        { "name": "Quitar referente", "request": { "method": "DELETE", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/familias/{{familia_id}}/referente", "host": ["{{base_url}}"], "path": ["api", "familias", "{{familia_id}}", "referente"] } } },
-        { "name": "Integrantes", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/familias/{{familia_id}}/integrantes", "host": ["{{base_url}}"], "path": ["api", "familias", "{{familia_id}}", "integrantes"] } } },
-        { "name": "Donaciones", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/familias/{{familia_id}}/donaciones", "host": ["{{base_url}}"], "path": ["api", "familias", "{{familia_id}}", "donaciones"] } } },
-        { "name": "Pedidos especiales", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/familias/{{familia_id}}/pedidos-especiales", "host": ["{{base_url}}"], "path": ["api", "familias", "{{familia_id}}", "pedidos-especiales"] } } },
-        { "name": "Registros asistencia", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/familias/{{familia_id}}/registros-asistencia", "host": ["{{base_url}}"], "path": ["api", "familias", "{{familia_id}}", "registros-asistencia"] } } },
-        { "name": "Visitas domiciliarias", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/familias/{{familia_id}}/visitas-domiciliarias", "host": ["{{base_url}}"], "path": ["api", "familias", "{{familia_id}}", "visitas-domiciliarias"] } } },
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/familias?per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "familias"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "15"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/familias/{{familia_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "familias",
+                "{{familia_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"direccion\": \"Direccion de ejemplo\",\n  \"telefono\": \"123456\",\n  \"puntaje_prioridad\": 10,\n  \"prioridad_social\": \"ALTA\",\n  \"estado_lista\": \"PRINCIPAL\",\n  \"fecha_ingreso\": \"2026-06-04\",\n  \"activa\": true,\n  \"registrado_por\": {{usuario_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/familias",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "familias"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"direccion\": \"Direccion de ejemplo\",\n  \"telefono\": \"123456\",\n  \"puntaje_prioridad\": 10,\n  \"prioridad_social\": \"ALTA\",\n  \"estado_lista\": \"PRINCIPAL\",\n  \"fecha_ingreso\": \"2026-06-04\",\n  \"activa\": true,\n  \"registrado_por\": {{usuario_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/familias/{{familia_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "familias",
+                "{{familia_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cambiar familia de LISTA",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"direccion\": \"Direccion de ejemplo\",\n  \"telefono\": \"123456\",\n  \"puntaje_prioridad\": 10,\n  \"prioridad_social\": \"ALTA\",\n  \"estado_lista\": \"PRINCIPAL\",\n  \"fecha_ingreso\": \"2026-06-04\",\n  \"activa\": true,\n  \"registrado_por\": {{usuario_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/familias/{{familia_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "familias",
+                "{{familia_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/familias/{{familia_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "familias",
+                "{{familia_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Referente",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/familias/{{familia_id}}/referente",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "familias",
+                "{{familia_id}}",
+                "referente"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Asignar referente",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"integrante_id\": {{integrante_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/familias/{{familia_id}}/referente",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "familias",
+                "{{familia_id}}",
+                "referente"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Quitar referente",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/familias/{{familia_id}}/referente",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "familias",
+                "{{familia_id}}",
+                "referente"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Integrantes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/familias/{{familia_id}}/integrantes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "familias",
+                "{{familia_id}}",
+                "integrantes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Donaciones",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/familias/{{familia_id}}/donaciones",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "familias",
+                "{{familia_id}}",
+                "donaciones"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pedidos especiales",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/familias/{{familia_id}}/pedidos-especiales",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "familias",
+                "{{familia_id}}",
+                "pedidos-especiales"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Registros asistencia",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/familias/{{familia_id}}/registros-asistencia",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "familias",
+                "{{familia_id}}",
+                "registros-asistencia"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Visitas domiciliarias",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/familias/{{familia_id}}/visitas-domiciliarias",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "familias",
+                "{{familia_id}}",
+                "visitas-domiciliarias"
+              ]
+            }
+          },
+          "response": []
+        },
         {
           "name": "Listar por nivel prioridad",
           "request": {
             "method": "GET",
-            "header": [{ "key": "Accept", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
             "url": {
-              "raw": "{{base_url}}/api/familias?prioridad_social=alta",
-              "host": ["{{base_url}}"],
-              "path": ["api", "familias"],
+              "raw": "{{base_url}}/api/familias?prioridad_social=alta&per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "familias"
+              ],
               "query": [
-                { "key": "prioridad_social", "value": "alta" },
-                { "key": "per_page", "value": "15" }
+                {
+                  "key": "prioridad_social",
+                  "value": "alta"
+                },
+                {
+                  "key": "per_page",
+                  "value": "15"
+                }
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Listar evaluadas",
           "request": {
             "method": "GET",
-            "header": [{ "key": "Accept", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
             "url": {
-              "raw": "{{base_url}}/api/familias?evaluada=true",
-              "host": ["{{base_url}}"],
-              "path": ["api", "familias"],
+              "raw": "{{base_url}}/api/familias?evaluada=true&per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "familias"
+              ],
               "query": [
-                { "key": "evaluada", "value": "true" },
-                { "key": "per_page", "value": "15" }
+                {
+                  "key": "evaluada",
+                  "value": "true"
+                },
+                {
+                  "key": "per_page",
+                  "value": "15"
+                }
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Listar no evaluadas",
           "request": {
             "method": "GET",
-            "header": [{ "key": "Accept", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
             "url": {
-              "raw": "{{base_url}}/api/familias?evaluada=false",
-              "host": ["{{base_url}}"],
-              "path": ["api", "familias"],
+              "raw": "{{base_url}}/api/familias?evaluada=false&per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "familias"
+              ],
               "query": [
-                { "key": "evaluada", "value": "false" },
-                { "key": "per_page", "value": "15" }
+                {
+                  "key": "evaluada",
+                  "value": "false"
+                },
+                {
+                  "key": "per_page",
+                  "value": "15"
+                }
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Listar por estado lista",
           "request": {
             "method": "GET",
-            "header": [{ "key": "Accept", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
             "url": {
-              "raw": "{{base_url}}/api/familias?estado_lista=ESPERA",
-              "host": ["{{base_url}}"],
-              "path": ["api", "familias"],
+              "raw": "{{base_url}}/api/familias?estado_lista=ESPERA&per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "familias"
+              ],
               "query": [
-                { "key": "estado_lista", "value": "ESPERA" },
-                { "key": "per_page", "value": "15" }
+                {
+                  "key": "estado_lista",
+                  "value": "ESPERA"
+                },
+                {
+                  "key": "per_page",
+                  "value": "15"
+                }
               ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Listar ordenado por puntaje",
           "request": {
             "method": "GET",
-            "header": [{ "key": "Accept", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
             "url": {
-              "raw": "{{base_url}}/api/familias?sort_by=puntaje_prioridad&sort_order=desc",
-              "host": ["{{base_url}}"],
-              "path": ["api", "familias"],
+              "raw": "{{base_url}}/api/familias?sort_by=puntaje_prioridad&sort_order=desc&per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "familias"
+              ],
               "query": [
-                { "key": "sort_by", "value": "puntaje_prioridad" },
-                { "key": "sort_order", "value": "desc" },
-                { "key": "per_page", "value": "15" }
+                {
+                  "key": "sort_by",
+                  "value": "puntaje_prioridad"
+                },
+                {
+                  "key": "sort_order",
+                  "value": "desc"
+                },
+                {
+                  "key": "per_page",
+                  "value": "15"
+                }
               ]
             }
-          }
+          },
+          "response": []
         }
       ]
     },
     {
       "name": "integrantes",
       "item": [
-        { "name": "Listar", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/integrantes?per_page=15", "host": ["{{base_url}}"], "path": ["api", "integrantes"], "query": [{ "key": "per_page", "value": "15" }] } } },
-        { "name": "Obtener", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/integrantes/{{integrante_id}}", "host": ["{{base_url}}"], "path": ["api", "integrantes", "{{integrante_id}}"] } } },
-        { "name": "Crear", "request": { "method": "POST", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Perez\",\n  \"fecha_nacimiento\": \"2010-01-01\",\n  \"tipo_documento\": \"DNI\",\n  \"numero_documento\": \"12345678\",\n  \"categoria_etaria\": \"Adolescente\",\n  \"referente\": false,\n  \"familia_id\": {{familia_id}}\n}" }, "url": { "raw": "{{base_url}}/api/integrantes", "host": ["{{base_url}}"], "path": ["api", "integrantes"] } } },
-        { "name": "Actualizar", "request": { "method": "PUT", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Perez\",\n  \"fecha_nacimiento\": \"2010-01-01\",\n  \"tipo_documento\": \"DNI\",\n  \"numero_documento\": \"12345678\",\n  \"categoria_etaria\": \"Adolescente\",\n  \"referente\": false,\n  \"familia_id\": {{familia_id}}\n}" }, "url": { "raw": "{{base_url}}/api/integrantes/{{integrante_id}}", "host": ["{{base_url}}"], "path": ["api", "integrantes", "{{integrante_id}}"] } } },
-        { "name": "Eliminar", "request": { "method": "DELETE", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/integrantes/{{integrante_id}}", "host": ["{{base_url}}"], "path": ["api", "integrantes", "{{integrante_id}}"] } } },
-        { "name": "Documentos", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/integrantes/{{integrante_id}}/documentos", "host": ["{{base_url}}"], "path": ["api", "integrantes", "{{integrante_id}}", "documentos"] } } },
-        { "name": "Participaciones comision", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/integrantes/{{integrante_id}}/participaciones-comision", "host": ["{{base_url}}"], "path": ["api", "integrantes", "{{integrante_id}}", "participaciones-comision"] } } }
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/integrantes?per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "integrantes"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "15"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/integrantes/{{integrante_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "integrantes",
+                "{{integrante_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Perez\",\n  \"fecha_nacimiento\": \"2010-01-01\",\n  \"tipo_documento\": \"DNI\",\n  \"numero_documento\": \"12345678\",\n  \"referente\": false,\n  \"familia_id\": {{familia_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/integrantes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "integrantes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Perez\",\n  \"fecha_nacimiento\": \"2010-01-01\",\n  \"tipo_documento\": \"DNI\",\n  \"numero_documento\": \"12345678\",\n  \"referente\": false,\n  \"familia_id\": {{familia_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/integrantes/{{integrante_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "integrantes",
+                "{{integrante_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/integrantes/{{integrante_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "integrantes",
+                "{{integrante_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Documentos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/integrantes/{{integrante_id}}/documentos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "integrantes",
+                "{{integrante_id}}",
+                "documentos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Participaciones comision",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/integrantes/{{integrante_id}}/participaciones-comision",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "integrantes",
+                "{{integrante_id}}",
+                "participaciones-comision"
+              ]
+            }
+          },
+          "response": []
+        }
       ]
     },
     {
       "name": "donaciones",
       "item": [
-        { "name": "Listar", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/donaciones?per_page=15", "host": ["{{base_url}}"], "path": ["api", "donaciones"], "query": [{ "key": "per_page", "value": "15" }] } } },
-        { "name": "Obtener", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/donaciones/{{donacion_id}}", "host": ["{{base_url}}"], "path": ["api", "donaciones", "{{donacion_id}}"] } } },
-        { "name": "Crear", "request": { "method": "POST", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"origen\": \"Donante\",\n  \"descripcion\": \"Bolson de ejemplo\",\n  \"cantidad\": 1,\n  \"unidad_medida\": \"unidad\",\n  \"fecha_recepcion\": \"2026-06-04\",\n  \"registrado_por\": {{usuario_id}},\n  \"familia_id\": {{familia_id}}\n}" }, "url": { "raw": "{{base_url}}/api/donaciones", "host": ["{{base_url}}"], "path": ["api", "donaciones"] } } },
-        { "name": "Actualizar", "request": { "method": "PUT", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"origen\": \"Donante\",\n  \"descripcion\": \"Bolson de ejemplo\",\n  \"cantidad\": 1,\n  \"unidad_medida\": \"unidad\",\n  \"fecha_recepcion\": \"2026-06-04\",\n  \"registrado_por\": {{usuario_id}},\n  \"familia_id\": {{familia_id}}\n}" }, "url": { "raw": "{{base_url}}/api/donaciones/{{donacion_id}}", "host": ["{{base_url}}"], "path": ["api", "donaciones", "{{donacion_id}}"] } } },
-        { "name": "Eliminar", "request": { "method": "DELETE", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/donaciones/{{donacion_id}}", "host": ["{{base_url}}"], "path": ["api", "donaciones", "{{donacion_id}}"] } } }
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/donaciones?per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "donaciones"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "15"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/donaciones/{{donacion_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "donaciones",
+                "{{donacion_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"origen\": \"Donante\",\n  \"descripcion\": \"Bolson de ejemplo\",\n  \"cantidad\": 1,\n  \"unidad_medida\": \"unidad\",\n  \"fecha_recepcion\": \"2026-06-04\",\n  \"registrado_por\": {{usuario_id}},\n  \"familia_id\": {{familia_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/donaciones",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "donaciones"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"origen\": \"Donante\",\n  \"descripcion\": \"Bolson de ejemplo\",\n  \"cantidad\": 1,\n  \"unidad_medida\": \"unidad\",\n  \"fecha_recepcion\": \"2026-06-04\",\n  \"registrado_por\": {{usuario_id}},\n  \"familia_id\": {{familia_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/donaciones/{{donacion_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "donaciones",
+                "{{donacion_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/donaciones/{{donacion_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "donaciones",
+                "{{donacion_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
       ]
     },
     {
       "name": "pedidos-especiales",
       "item": [
-        { "name": "Listar", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/pedidos-especiales?per_page=15", "host": ["{{base_url}}"], "path": ["api", "pedidos-especiales"], "query": [{ "key": "per_page", "value": "15" }] } } },
-        { "name": "Obtener", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/pedidos-especiales/{{pedido_especial_id}}", "host": ["{{base_url}}"], "path": ["api", "pedidos-especiales", "{{pedido_especial_id}}"] } } },
-        { "name": "Crear", "request": { "method": "POST", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"descripcion\": \"Pedido de ejemplo\",\n  \"estado\": \"nuevo\",\n  \"fecha_carga\": \"2026-06-04\",\n  \"registrado_por\": {{usuario_id}},\n  \"familia_id\": {{familia_id}}\n}" }, "url": { "raw": "{{base_url}}/api/pedidos-especiales", "host": ["{{base_url}}"], "path": ["api", "pedidos-especiales"] } } },
-        { "name": "Actualizar", "request": { "method": "PUT", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"descripcion\": \"Pedido de ejemplo\",\n  \"estado\": \"nuevo\",\n  \"fecha_carga\": \"2026-06-04\",\n  \"registrado_por\": {{usuario_id}},\n  \"familia_id\": {{familia_id}}\n}" }, "url": { "raw": "{{base_url}}/api/pedidos-especiales/{{pedido_especial_id}}", "host": ["{{base_url}}"], "path": ["api", "pedidos-especiales", "{{pedido_especial_id}}"] } } },
-        { "name": "Eliminar", "request": { "method": "DELETE", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/pedidos-especiales/{{pedido_especial_id}}", "host": ["{{base_url}}"], "path": ["api", "pedidos-especiales", "{{pedido_especial_id}}"] } } }
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pedidos-especiales?per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "pedidos-especiales"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "15"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pedidos-especiales/{{pedido_especial_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "pedidos-especiales",
+                "{{pedido_especial_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"descripcion\": \"Pedido de ejemplo\",\n  \"estado\": \"nuevo\",\n  \"fecha_carga\": \"2026-06-04\",\n  \"registrado_por\": {{usuario_id}},\n  \"familia_id\": {{familia_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/pedidos-especiales",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "pedidos-especiales"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"descripcion\": \"Pedido de ejemplo\",\n  \"estado\": \"nuevo\",\n  \"fecha_carga\": \"2026-06-04\",\n  \"registrado_por\": {{usuario_id}},\n  \"familia_id\": {{familia_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/pedidos-especiales/{{pedido_especial_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "pedidos-especiales",
+                "{{pedido_especial_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pedidos-especiales/{{pedido_especial_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "pedidos-especiales",
+                "{{pedido_especial_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
       ]
     },
     {
       "name": "comisiones",
       "item": [
-        { "name": "Listar", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/comisiones?per_page=15", "host": ["{{base_url}}"], "path": ["api", "comisiones"], "query": [{ "key": "per_page", "value": "15" }] } } },
-        { "name": "Obtener", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/comisiones/{{comision_id}}", "host": ["{{base_url}}"], "path": ["api", "comisiones", "{{comision_id}}"] } } },
-        { "name": "Crear", "request": { "method": "POST", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Comision de ejemplo\",\n  \"activa\": true,\n  \"descripcion\": \"Descripcion de ejemplo\",\n  \"encargado\": {{usuario_id}}\n}" }, "url": { "raw": "{{base_url}}/api/comisiones", "host": ["{{base_url}}"], "path": ["api", "comisiones"] } } },
-        { "name": "Actualizar", "request": { "method": "PUT", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Comision de ejemplo\",\n  \"activa\": true,\n  \"descripcion\": \"Descripcion de ejemplo\",\n  \"encargado\": {{usuario_id}}\n}" }, "url": { "raw": "{{base_url}}/api/comisiones/{{comision_id}}", "host": ["{{base_url}}"], "path": ["api", "comisiones", "{{comision_id}}"] } } },
-        { "name": "Eliminar", "request": { "method": "DELETE", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/comisiones/{{comision_id}}", "host": ["{{base_url}}"], "path": ["api", "comisiones", "{{comision_id}}"] } } },
-        { "name": "Participaciones", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/comisiones/{{comision_id}}/participaciones", "host": ["{{base_url}}"], "path": ["api", "comisiones", "{{comision_id}}", "participaciones"] } } }
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/comisiones?per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "comisiones"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "15"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/comisiones/{{comision_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "comisiones",
+                "{{comision_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Comision de ejemplo\",\n  \"activa\": true,\n  \"descripcion\": \"Descripcion de ejemplo\",\n  \"encargado\": {{usuario_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/comisiones",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "comisiones"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Comision de ejemplo\",\n  \"activa\": true,\n  \"descripcion\": \"Descripcion de ejemplo\",\n  \"encargado\": {{usuario_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/comisiones/{{comision_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "comisiones",
+                "{{comision_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/comisiones/{{comision_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "comisiones",
+                "{{comision_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Participaciones",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/comisiones/{{comision_id}}/participaciones",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "comisiones",
+                "{{comision_id}}",
+                "participaciones"
+              ]
+            }
+          },
+          "response": []
+        }
       ]
     },
     {
       "name": "participaciones-comision",
       "item": [
-        { "name": "Listar", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/participaciones-comision?per_page=15", "host": ["{{base_url}}"], "path": ["api", "participaciones-comision"], "query": [{ "key": "per_page", "value": "15" }] } } },
-        { "name": "Obtener", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/participaciones-comision/{{participacion_comision_id}}", "host": ["{{base_url}}"], "path": ["api", "participaciones-comision", "{{participacion_comision_id}}"] } } },
-        { "name": "Crear", "request": { "method": "POST", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"fecha_inicio\": \"2026-06-04\",\n  \"estado\": true,\n  \"observaciones\": \"Alta de ejemplo\",\n  \"integrante_id\": {{integrante_id}},\n  \"comision_id\": {{comision_id}}\n}" }, "url": { "raw": "{{base_url}}/api/participaciones-comision", "host": ["{{base_url}}"], "path": ["api", "participaciones-comision"] } } },
-        { "name": "Actualizar", "request": { "method": "PUT", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"fecha_inicio\": \"2026-06-04\",\n  \"estado\": true,\n  \"observaciones\": \"Alta de ejemplo\",\n  \"integrante_id\": {{integrante_id}},\n  \"comision_id\": {{comision_id}}\n}" }, "url": { "raw": "{{base_url}}/api/participaciones-comision/{{participacion_comision_id}}", "host": ["{{base_url}}"], "path": ["api", "participaciones-comision", "{{participacion_comision_id}}"] } } },
-        { "name": "Eliminar", "request": { "method": "DELETE", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/participaciones-comision/{{participacion_comision_id}}", "host": ["{{base_url}}"], "path": ["api", "participaciones-comision", "{{participacion_comision_id}}"] } } }
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/participaciones-comision?per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "participaciones-comision"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "15"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/participaciones-comision/{{participacion_comision_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "participaciones-comision",
+                "{{participacion_comision_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fecha_inicio\": \"2026-06-04\",\n  \"estado\": true,\n  \"observaciones\": \"Alta de ejemplo\",\n  \"integrante_id\": {{integrante_id}},\n  \"comision_id\": {{comision_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/participaciones-comision",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "participaciones-comision"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fecha_inicio\": \"2026-06-04\",\n  \"estado\": true,\n  \"observaciones\": \"Alta de ejemplo\",\n  \"integrante_id\": {{integrante_id}},\n  \"comision_id\": {{comision_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/participaciones-comision/{{participacion_comision_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "participaciones-comision",
+                "{{participacion_comision_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/participaciones-comision/{{participacion_comision_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "participaciones-comision",
+                "{{participacion_comision_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
       ]
     },
     {
       "name": "visitas-domiciliarias",
       "item": [
-        { "name": "Listar", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/visitas-domiciliarias?per_page=15", "host": ["{{base_url}}"], "path": ["api", "visitas-domiciliarias"], "query": [{ "key": "per_page", "value": "15" }] } } },
-        { "name": "Obtener", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/visitas-domiciliarias/{{visita_domiciliaria_id}}", "host": ["{{base_url}}"], "path": ["api", "visitas-domiciliarias", "{{visita_domiciliaria_id}}"] } } },
-        { "name": "Crear", "request": { "method": "POST", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"fecha\": \"2026-06-04\",\n  \"observaciones\": \"Visita de ejemplo\",\n  \"familia_id\": {{familia_id}}\n}" }, "url": { "raw": "{{base_url}}/api/visitas-domiciliarias", "host": ["{{base_url}}"], "path": ["api", "visitas-domiciliarias"] } } },
-        { "name": "Actualizar", "request": { "method": "PUT", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"fecha\": \"2026-06-04\",\n  \"observaciones\": \"Visita de ejemplo\",\n  \"familia_id\": {{familia_id}}\n}" }, "url": { "raw": "{{base_url}}/api/visitas-domiciliarias/{{visita_domiciliaria_id}}", "host": ["{{base_url}}"], "path": ["api", "visitas-domiciliarias", "{{visita_domiciliaria_id}}"] } } },
-        { "name": "Eliminar", "request": { "method": "DELETE", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/visitas-domiciliarias/{{visita_domiciliaria_id}}", "host": ["{{base_url}}"], "path": ["api", "visitas-domiciliarias", "{{visita_domiciliaria_id}}"] } } },
-        { "name": "Usuarios", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/visitas-domiciliarias/{{visita_domiciliaria_id}}/usuarios", "host": ["{{base_url}}"], "path": ["api", "visitas-domiciliarias", "{{visita_domiciliaria_id}}", "usuarios"] } } },
-        { "name": "Sync usuarios", "request": { "method": "POST", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"usuarios\": [{{usuario_id}}]\n}" }, "url": { "raw": "{{base_url}}/api/visitas-domiciliarias/{{visita_domiciliaria_id}}/usuarios/sync", "host": ["{{base_url}}"], "path": ["api", "visitas-domiciliarias", "{{visita_domiciliaria_id}}", "usuarios", "sync"] } } }
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/visitas-domiciliarias?per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "visitas-domiciliarias"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "15"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/visitas-domiciliarias/{{visita_domiciliaria_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "visitas-domiciliarias",
+                "{{visita_domiciliaria_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fecha\": \"2026-06-04\",\n  \"observaciones\": \"Visita de ejemplo\",\n  \"familia_id\": {{familia_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/visitas-domiciliarias",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "visitas-domiciliarias"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fecha\": \"2026-06-04\",\n  \"observaciones\": \"Visita de ejemplo\",\n  \"familia_id\": {{familia_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/visitas-domiciliarias/{{visita_domiciliaria_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "visitas-domiciliarias",
+                "{{visita_domiciliaria_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/visitas-domiciliarias/{{visita_domiciliaria_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "visitas-domiciliarias",
+                "{{visita_domiciliaria_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Usuarios",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/visitas-domiciliarias/{{visita_domiciliaria_id}}/usuarios",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "visitas-domiciliarias",
+                "{{visita_domiciliaria_id}}",
+                "usuarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sync usuarios",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuarios\": [{{usuario_id}}]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/visitas-domiciliarias/{{visita_domiciliaria_id}}/usuarios/sync",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "visitas-domiciliarias",
+                "{{visita_domiciliaria_id}}",
+                "usuarios",
+                "sync"
+              ]
+            }
+          },
+          "response": []
+        }
       ]
     },
     {
       "name": "autorizaciones",
       "item": [
-        { "name": "Listar", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/autorizaciones?per_page=15", "host": ["{{base_url}}"], "path": ["api", "autorizaciones"], "query": [{ "key": "per_page", "value": "15" }] } } },
-        { "name": "Obtener", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/autorizaciones/{{autorizacion_id}}", "host": ["{{base_url}}"], "path": ["api", "autorizaciones", "{{autorizacion_id}}"] } } },
-        { "name": "Crear", "request": { "method": "POST", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"tipo\": \"General\",\n  \"vigente\": true,\n  \"vencimiento\": \"2026-12-31\"\n}" }, "url": { "raw": "{{base_url}}/api/autorizaciones", "host": ["{{base_url}}"], "path": ["api", "autorizaciones"] } } },
-        { "name": "Actualizar", "request": { "method": "PUT", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"tipo\": \"General\",\n  \"vigente\": true,\n  \"vencimiento\": \"2026-12-31\"\n}" }, "url": { "raw": "{{base_url}}/api/autorizaciones/{{autorizacion_id}}", "host": ["{{base_url}}"], "path": ["api", "autorizaciones", "{{autorizacion_id}}"] } } },
-        { "name": "Eliminar", "request": { "method": "DELETE", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/autorizaciones/{{autorizacion_id}}", "host": ["{{base_url}}"], "path": ["api", "autorizaciones", "{{autorizacion_id}}"] } } }
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/autorizaciones?per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "autorizaciones"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "15"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/autorizaciones/{{autorizacion_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "autorizaciones",
+                "{{autorizacion_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"General\",\n  \"vigente\": true,\n  \"vencimiento\": \"2026-12-31\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/autorizaciones",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "autorizaciones"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"General\",\n  \"vigente\": true,\n  \"vencimiento\": \"2026-12-31\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/autorizaciones/{{autorizacion_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "autorizaciones",
+                "{{autorizacion_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/autorizaciones/{{autorizacion_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "autorizaciones",
+                "{{autorizacion_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
       ]
     },
     {
       "name": "auditorias",
       "item": [
-        { "name": "Listar", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/auditorias?per_page=15", "host": ["{{base_url}}"], "path": ["api", "auditorias"], "query": [{ "key": "per_page", "value": "15" }] } } },
-        { "name": "Obtener", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/auditorias/{{auditoria_id}}", "host": ["{{base_url}}"], "path": ["api", "auditorias", "{{auditoria_id}}"] } } }
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auditorias?per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auditorias"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "15"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auditorias/{{auditoria_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auditorias",
+                "{{auditoria_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
       ]
     },
     {
       "name": "registros-asistencia",
       "item": [
-        { "name": "Listar", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/registros-asistencia?per_page=15", "host": ["{{base_url}}"], "path": ["api", "registros-asistencia"], "query": [{ "key": "per_page", "value": "15" }] } } },
-        { "name": "Obtener", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/registros-asistencia/{{registro_asistencia_id}}", "host": ["{{base_url}}"], "path": ["api", "registros-asistencia", "{{registro_asistencia_id}}"] } } },
-        { "name": "Crear", "request": { "method": "POST", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"familia_id\": {{familia_id}},\n  \"fecha\": \"2026-06-04\",\n  \"estado\": \"presente\",\n  \"registrado_por\": {{usuario_id}}\n}" }, "url": { "raw": "{{base_url}}/api/registros-asistencia", "host": ["{{base_url}}"], "path": ["api", "registros-asistencia"] } } },
-        { "name": "Actualizar", "request": { "method": "PUT", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"familia_id\": {{familia_id}},\n  \"fecha\": \"2026-06-04\",\n  \"estado\": \"presente\",\n  \"registrado_por\": {{usuario_id}}\n}" }, "url": { "raw": "{{base_url}}/api/registros-asistencia/{{registro_asistencia_id}}", "host": ["{{base_url}}"], "path": ["api", "registros-asistencia", "{{registro_asistencia_id}}"] } } },
-        { "name": "Eliminar", "request": { "method": "DELETE", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/registros-asistencia/{{registro_asistencia_id}}", "host": ["{{base_url}}"], "path": ["api", "registros-asistencia", "{{registro_asistencia_id}}"] } } }
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/registros-asistencia?per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "registros-asistencia"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "15"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/registros-asistencia/{{registro_asistencia_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "registros-asistencia",
+                "{{registro_asistencia_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"familia_id\": {{familia_id}},\n  \"fecha\": \"2026-06-04\",\n  \"estado\": \"presente\",\n  \"registrado_por\": {{usuario_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/registros-asistencia",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "registros-asistencia"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"familia_id\": {{familia_id}},\n  \"fecha\": \"2026-06-04\",\n  \"estado\": \"presente\",\n  \"registrado_por\": {{usuario_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/registros-asistencia/{{registro_asistencia_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "registros-asistencia",
+                "{{registro_asistencia_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/registros-asistencia/{{registro_asistencia_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "registros-asistencia",
+                "{{registro_asistencia_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
       ]
     },
     {
       "name": "documentos",
       "item": [
-        { "name": "Listar", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/documentos?per_page=15", "host": ["{{base_url}}"], "path": ["api", "documentos"], "query": [{ "key": "per_page", "value": "15" }] } } },
-        { "name": "Obtener", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/documentos/{{documento_id}}", "host": ["{{base_url}}"], "path": ["api", "documentos", "{{documento_id}}"] } } },
-        { "name": "Crear", "request": { "method": "POST", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"tipo\": \"DNI\",\n  \"vigente\": true,\n  \"vencimiento\": \"2026-12-31\"\n}" }, "url": { "raw": "{{base_url}}/api/documentos", "host": ["{{base_url}}"], "path": ["api", "documentos"] } } },
-        { "name": "Actualizar", "request": { "method": "PUT", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"tipo\": \"DNI\",\n  \"vigente\": true,\n  \"vencimiento\": \"2026-12-31\"\n}" }, "url": { "raw": "{{base_url}}/api/documentos/{{documento_id}}", "host": ["{{base_url}}"], "path": ["api", "documentos", "{{documento_id}}"] } } },
-        { "name": "Eliminar", "request": { "method": "DELETE", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/documentos/{{documento_id}}", "host": ["{{base_url}}"], "path": ["api", "documentos", "{{documento_id}}"] } } },
-        { "name": "Integrantes", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/documentos/{{documento_id}}/integrantes", "host": ["{{base_url}}"], "path": ["api", "documentos", "{{documento_id}}", "integrantes"] } } },
-        { "name": "Sync integrantes", "request": { "method": "POST", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"integrantes\": [{{integrante_id}}]\n}" }, "url": { "raw": "{{base_url}}/api/documentos/{{documento_id}}/integrantes/sync", "host": ["{{base_url}}"], "path": ["api", "documentos", "{{documento_id}}", "integrantes", "sync"] } } }
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/documentos?per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "documentos"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "15"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/documentos/{{documento_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "documentos",
+                "{{documento_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"DNI\",\n  \"vigente\": true,\n  \"vencimiento\": \"2026-12-31\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/documentos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "documentos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"DNI\",\n  \"vigente\": true,\n  \"vencimiento\": \"2026-12-31\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/documentos/{{documento_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "documentos",
+                "{{documento_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/documentos/{{documento_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "documentos",
+                "{{documento_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Integrantes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/documentos/{{documento_id}}/integrantes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "documentos",
+                "{{documento_id}}",
+                "integrantes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sync integrantes",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"integrantes\": [{{integrante_id}}]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/documentos/{{documento_id}}/integrantes/sync",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "documentos",
+                "{{documento_id}}",
+                "integrantes",
+                "sync"
+              ]
+            }
+          },
+          "response": []
+        }
       ]
     },
     {
@@ -404,22 +2944,6 @@
       "item": [
         {
           "name": "Evaluar prioridad",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"puntaje_menores\": 2,\n  \"puntaje_alimentacion\": 2,\n  \"puntaje_asistencia\": 1,\n  \"puntaje_participacion\": 0\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/familias/{{familia_id}}/evaluar-prioridad",
-              "host": ["{{base_url}}"],
-              "path": ["api", "familias", "{{familia_id}}", "evaluar-prioridad"]
-            }
-          },
           "event": [
             {
               "listen": "test",
@@ -448,26 +2972,40 @@
                 ]
               }
             }
-          ]
-        },
-        {
-          "name": "Evaluar prioridad - participacion activa",
+          ],
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"puntaje_menores\": 0,\n  \"puntaje_alimentacion\": 0,\n  \"puntaje_asistencia\": 0,\n  \"puntaje_participacion\": 2\n}"
+              "raw": "{\n  \"puntaje_menores\": 2,\n  \"puntaje_alimentacion\": 2,\n  \"puntaje_asistencia\": 1,\n  \"puntaje_participacion\": 0\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/familias/{{familia_id}}/evaluar-prioridad",
-              "host": ["{{base_url}}"],
-              "path": ["api", "familias", "{{familia_id}}", "evaluar-prioridad"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "familias",
+                "{{familia_id}}",
+                "evaluar-prioridad"
+              ]
             }
           },
+          "response": []
+        },
+        {
+          "name": "Evaluar prioridad - participacion activa",
           "event": [
             {
               "listen": "test",
@@ -484,9 +3022,55 @@
                 ]
               }
             }
-          ]
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"puntaje_menores\": 0,\n  \"puntaje_alimentacion\": 0,\n  \"puntaje_asistencia\": 0,\n  \"puntaje_participacion\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/familias/{{familia_id}}/evaluar-prioridad",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "familias",
+                "{{familia_id}}",
+                "evaluar-prioridad"
+              ]
+            }
+          },
+          "response": []
         }
       ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "access_token",
+      "value": ""
     }
   ]
 }
