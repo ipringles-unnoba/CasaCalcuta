@@ -35,7 +35,6 @@ class IntegranteController extends Controller
             'fecha_nacimiento' => ['required', 'date'],
             'tipo_documento' => ['required', 'string', 'max:255'],
             'numero_documento' => ['required', 'string', 'max:255', Rule::unique('integrantes', 'numero_documento')],
-            'categoria_etaria' => ['required', 'string', 'max:255'],
             'referente' => ['required', 'boolean'],
             'familia_id' => ['required', 'integer', 'exists:familias,id_familia'],
         ];
@@ -49,7 +48,6 @@ class IntegranteController extends Controller
             'fecha_nacimiento' => ['sometimes', 'required', 'date'],
             'tipo_documento' => ['sometimes', 'required', 'string', 'max:255'],
             'numero_documento' => ['sometimes', 'required', 'string', 'max:255', Rule::unique('integrantes', 'numero_documento')->ignore($record->getKey(), 'id_integrante')],
-            'categoria_etaria' => ['sometimes', 'required', 'string', 'max:255'],
             'referente' => ['sometimes', 'required', 'boolean'],
             'familia_id' => ['sometimes', 'required', 'integer', 'exists:familias,id_familia'],
         ];
@@ -71,6 +69,8 @@ class IntegranteController extends Controller
             return $integrante;
         });
 
+        $this->recalcularPuntajeMenoresFamilia($integrante->familia_id);
+
         return response()->json($integrante->load($this->relations()), 201);
     }
 
@@ -91,12 +91,23 @@ class IntegranteController extends Controller
             $this->syncFamiliaReferente($integrante, $originalFamiliaId);
         });
 
+        $this->recalcularPuntajeMenoresFamilia($originalFamiliaId);
+        $this->recalcularPuntajeMenoresFamilia($integrante->familia_id);
+
         return response()->json($integrante->load($this->relations()));
     }
 
     public function destroy(Integrante $integrante): Response
     {
-        return $this->destroyRecord($integrante);
+        $familiaId = $integrante->familia_id;
+
+        DB::transaction(function () use ($integrante): void {
+            $integrante->delete();
+        });
+
+        $this->recalcularPuntajeMenoresFamilia($familiaId);
+
+        return response()->noContent();
     }
 
     public function documentos(Integrante $integrante): JsonResponse
@@ -137,5 +148,20 @@ class IntegranteController extends Controller
         if ($familia->referente && $familia->referente->getKey() === $integrante->getKey()) {
             $familia->forceFill(['referente_id' => null])->save();
         }
+    }
+
+    protected function recalcularPuntajeMenoresFamilia(?int $familiaId): void
+    {
+        if ($familiaId === null) {
+            return;
+        }
+
+        $familia = Familia::query()->find($familiaId);
+
+        if ($familia === null) {
+            return;
+        }
+
+        $familia->recalcular_puntaje_menores();
     }
 }

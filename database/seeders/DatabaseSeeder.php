@@ -127,5 +127,6 @@ class DatabaseSeeder extends Seeder
         );
 
         $this->call(SimpsonFamiliesSeeder::class);
+        $this->call(SessionDataSeeder::class);
     }
 }
