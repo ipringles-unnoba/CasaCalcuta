@@ -83,6 +83,7 @@ class FamiliaController extends Controller
 
         if ($request->filled('estado_lista')) {
             $query->where('estado_lista', $request->input('estado_lista'));
+            $query->reorder('puntaje_prioridad', 'desc')->orderByDesc('id_familia');
         }
 
         if ($request->filled('activa')) {
@@ -112,6 +113,10 @@ class FamiliaController extends Controller
             return $response;
         }
 
+        if ($response = $this->authorizeFamilyPermissions($request, self::LIST_PERMISSION)) {
+            return $response;
+        }
+
         $data = $request->validate($this->storeRules());
         $data = $this->applyAuthenticatedRegistrar($request, $data);
 
@@ -135,6 +140,7 @@ class FamiliaController extends Controller
 
     public function update(Request $request, Familia $familia): JsonResponse
     {
+        $estadoAnterior = $familia->estado_lista;
         $validated = $request->validate($this->updateRules($familia));
         $validated = $this->applyAuthenticatedRegistrar($request, $validated);
 
@@ -157,7 +163,17 @@ class FamiliaController extends Controller
         $familia->fill($validated);
         $familia->save();
 
-        return response()->json($familia->load($this->relations()));
+        $response = $familia->load($this->relations());
+
+        if (
+            isset($validated['estado_lista'])
+            && mb_strtoupper((string) $estadoAnterior) === 'PRINCIPAL'
+            && in_array(mb_strtoupper((string) $validated['estado_lista']), ['ESPERA', 'INACTIVA'], true)
+        ) {
+            $response->setAttribute('lista_espera', $this->listaEspera());
+        }
+
+        return response()->json($response);
     }
 
     public function destroy(Familia $familia): JsonResponse|Response
@@ -221,6 +237,16 @@ class FamiliaController extends Controller
         }
 
         return response()->json($familia->load('referente')->referente);
+    }
+
+    private function listaEspera()
+    {
+        return Familia::query()
+            ->with($this->relations())
+            ->where('estado_lista', 'ESPERA')
+            ->orderByDesc('puntaje_prioridad')
+            ->orderByDesc('id_familia')
+            ->paginate(15);
     }
 
     public function syncReferente(Request $request, Familia $familia): JsonResponse

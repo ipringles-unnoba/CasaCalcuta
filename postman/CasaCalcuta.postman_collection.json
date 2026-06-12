@@ -964,7 +964,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"direccion\": \"Direccion de ejemplo\",\n  \"telefono\": \"123456\",\n  \"puntaje_prioridad\": 10,\n  \"prioridad_social\": \"ALTA\",\n  \"estado_lista\": \"PRINCIPAL\",\n  \"fecha_ingreso\": \"2026-06-04\",\n  \"activa\": true,\n  \"registrado_por\": {{usuario_id}}\n}"
+              "raw": "{\n  \"estado_lista\": \"PRINCIPAL\" \n  //\"estado_lista\": \"ESPERA\",     //si se pasa una familia a ESPERA o INACTIVA se devuelve tambien\n  //\"estado_lista\": \"INACTIVA\",   // la lista de espera ordenada por el puntaje de prioridad\n  //\"registrado_por\": {{usuario_id}}\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/familias/{{familia_id}}",
@@ -2662,7 +2662,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"familia_id\": {{familia_id}},\n  \"fecha\": \"2026-06-04\",\n  \"estado\": \"presente\",\n  \"registrado_por\": {{usuario_id}}\n}"
+              "raw": "{\n  \"familia_id\": {{familia_id}},\n  \"fecha\": \"2026-08-24\",\n  \"estado\": \"ausente\"   //si hay ausentismo critico genera notificacion automaticamente\n  //\"registrado_por\": {{usuario_id}}   //si no se pone esta prop se toma por defecto user auth\n\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/registros-asistencia",
