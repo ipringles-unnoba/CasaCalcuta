@@ -211,7 +211,88 @@
         { "name": "Donaciones", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/familias/{{familia_id}}/donaciones", "host": ["{{base_url}}"], "path": ["api", "familias", "{{familia_id}}", "donaciones"] } } },
         { "name": "Pedidos especiales", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/familias/{{familia_id}}/pedidos-especiales", "host": ["{{base_url}}"], "path": ["api", "familias", "{{familia_id}}", "pedidos-especiales"] } } },
         { "name": "Registros asistencia", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/familias/{{familia_id}}/registros-asistencia", "host": ["{{base_url}}"], "path": ["api", "familias", "{{familia_id}}", "registros-asistencia"] } } },
-        { "name": "Visitas domiciliarias", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/familias/{{familia_id}}/visitas-domiciliarias", "host": ["{{base_url}}"], "path": ["api", "familias", "{{familia_id}}", "visitas-domiciliarias"] } } }
+        { "name": "Visitas domiciliarias", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/familias/{{familia_id}}/visitas-domiciliarias", "host": ["{{base_url}}"], "path": ["api", "familias", "{{familia_id}}", "visitas-domiciliarias"] } } },
+        {
+          "name": "Listar por nivel prioridad",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/api/familias?prioridad_social=alta",
+              "host": ["{{base_url}}"],
+              "path": ["api", "familias"],
+              "query": [
+                { "key": "prioridad_social", "value": "alta" },
+                { "key": "per_page", "value": "15" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar evaluadas",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/api/familias?evaluada=true",
+              "host": ["{{base_url}}"],
+              "path": ["api", "familias"],
+              "query": [
+                { "key": "evaluada", "value": "true" },
+                { "key": "per_page", "value": "15" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar no evaluadas",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/api/familias?evaluada=false",
+              "host": ["{{base_url}}"],
+              "path": ["api", "familias"],
+              "query": [
+                { "key": "evaluada", "value": "false" },
+                { "key": "per_page", "value": "15" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar por estado lista",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/api/familias?estado_lista=ESPERA",
+              "host": ["{{base_url}}"],
+              "path": ["api", "familias"],
+              "query": [
+                { "key": "estado_lista", "value": "ESPERA" },
+                { "key": "per_page", "value": "15" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar ordenado por puntaje",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/api/familias?sort_by=puntaje_prioridad&sort_order=desc",
+              "host": ["{{base_url}}"],
+              "path": ["api", "familias"],
+              "query": [
+                { "key": "sort_by", "value": "puntaje_prioridad" },
+                { "key": "sort_order", "value": "desc" },
+                { "key": "per_page", "value": "15" }
+              ]
+            }
+          }
+        }
       ]
     },
     {
@@ -316,6 +397,95 @@
         { "name": "Eliminar", "request": { "method": "DELETE", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/documentos/{{documento_id}}", "host": ["{{base_url}}"], "path": ["api", "documentos", "{{documento_id}}"] } } },
         { "name": "Integrantes", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": { "raw": "{{base_url}}/api/documentos/{{documento_id}}/integrantes", "host": ["{{base_url}}"], "path": ["api", "documentos", "{{documento_id}}", "integrantes"] } } },
         { "name": "Sync integrantes", "request": { "method": "POST", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"integrantes\": [{{integrante_id}}]\n}" }, "url": { "raw": "{{base_url}}/api/documentos/{{documento_id}}/integrantes/sync", "host": ["{{base_url}}"], "path": ["api", "documentos", "{{documento_id}}", "integrantes", "sync"] } } }
+      ]
+    },
+    {
+      "name": "priorizacion",
+      "item": [
+        {
+          "name": "Evaluar prioridad",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"puntaje_menores\": 2,\n  \"puntaje_alimentacion\": 2,\n  \"puntaje_asistencia\": 1,\n  \"puntaje_participacion\": 0\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/familias/{{familia_id}}/evaluar-prioridad",
+              "host": ["{{base_url}}"],
+              "path": ["api", "familias", "{{familia_id}}", "evaluar-prioridad"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (pm.response.code === 200) {",
+                  "  pm.test('Prioridad calculada correctamente', () => {",
+                  "    pm.expect(body).to.have.property('prioridad_social');",
+                  "    pm.expect(body).to.have.property('puntaje_prioridad');",
+                  "    pm.expect(body).to.have.property('puntaje_menores');",
+                  "    pm.expect(body).to.have.property('puntaje_alimentacion');",
+                  "    pm.expect(body).to.have.property('puntaje_asistencia');",
+                  "    pm.expect(body).to.have.property('puntaje_participacion');",
+                  "    pm.expect(body).to.have.property('fecha_ultima_evaluacion');",
+                  "    pm.expect(body).to.have.nested.property('evaluado_por.id_usuario');",
+                  "    pm.expect(['muy_baja', 'baja', 'media', 'alta', 'muy_alta']).to.include(body.prioridad_social);",
+                  "    pm.expect(body.puntaje_prioridad).to.be.at.least(0);",
+                  "  });",
+                  "} else if (pm.response.code === 403) {",
+                  "  pm.test('Acceso denegado - se requiere rol Administrador o Coordinador', () => {",
+                  "    pm.expect(body).to.have.property('message');",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Evaluar prioridad - participacion activa",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"puntaje_menores\": 0,\n  \"puntaje_alimentacion\": 0,\n  \"puntaje_asistencia\": 0,\n  \"puntaje_participacion\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/familias/{{familia_id}}/evaluar-prioridad",
+              "host": ["{{base_url}}"],
+              "path": ["api", "familias", "{{familia_id}}", "evaluar-prioridad"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (pm.response.code === 200) {",
+                  "  pm.test('Prioridad automatica por participacion activa', () => {",
+                  "    pm.expect(body.prioridad_social).to.equal('muy_alta');",
+                  "    pm.expect(body.puntaje_participacion).to.equal(2);",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
       ]
     }
   ]

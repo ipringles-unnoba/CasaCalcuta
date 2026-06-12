@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Concerns\CrudController;
 use App\Http\Controllers\Controller;
 use App\Models\Integrante;
 use App\Models\Familia;
+use App\Services\PriorizacionSocialService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -24,7 +25,7 @@ class FamiliaController extends Controller
 
     protected function relations(): array
     {
-        return ['registradoPor', 'referente'];
+        return ['registradoPor', 'referente', 'evaluadoPor'];
     }
 
     protected function storeRules(): array
@@ -32,8 +33,8 @@ class FamiliaController extends Controller
         return [
             'direccion' => ['required', 'string', 'max:255'],
             'telefono' => ['required', 'string', 'max:50'],
-            'puntaje_prioridad' => ['required', 'integer', 'min:0'],
-            'prioridad_social' => ['required', 'string', 'max:255'],
+            'puntaje_prioridad' => ['sometimes', 'nullable', 'integer', 'min:0'],
+            'prioridad_social' => ['sometimes', 'nullable', 'string', 'max:255'],
             'estado_lista' => ['required', 'string', 'max:255'],
             'fecha_ingreso' => ['required', 'date'],
             'activa' => ['required', 'boolean'],
@@ -46,8 +47,8 @@ class FamiliaController extends Controller
         return [
             'direccion' => ['sometimes', 'required', 'string', 'max:255'],
             'telefono' => ['sometimes', 'required', 'string', 'max:50'],
-            'puntaje_prioridad' => ['sometimes', 'required', 'integer', 'min:0'],
-            'prioridad_social' => ['sometimes', 'required', 'string', 'max:255'],
+            'puntaje_prioridad' => ['sometimes', 'nullable', 'integer', 'min:0'],
+            'prioridad_social' => ['sometimes', 'nullable', 'string', 'max:255'],
             'estado_lista' => ['sometimes', 'required', 'string', 'max:255'],
             'fecha_ingreso' => ['sometimes', 'required', 'date'],
             'activa' => ['sometimes', 'required', 'boolean'],
@@ -63,7 +64,35 @@ class FamiliaController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        return $this->indexRecords($request);
+        $query = Familia::query()->with($this->relations())->latest($this->orderBy());
+
+        if ($request->filled('prioridad_social')) {
+            $query->where('prioridad_social', $request->input('prioridad_social'));
+        }
+
+        if ($request->filled('estado_lista')) {
+            $query->where('estado_lista', $request->input('estado_lista'));
+        }
+
+        if ($request->filled('activa')) {
+            $query->where('activa', $request->boolean('activa'));
+        }
+
+        if ($request->filled('evaluada')) {
+            $evaluada = $request->boolean('evaluada');
+            $evaluada ? $query->whereNotNull('evaluado_por') : $query->whereNull('evaluado_por');
+        }
+
+        if ($request->filled('sort_by')) {
+            $sortBy = $request->input('sort_by');
+            $sortOrder = $request->input('sort_order', 'desc');
+
+            if (in_array($sortBy, ['puntaje_prioridad', 'prioridad_social', 'fecha_ingreso', 'direccion'])) {
+                $query->reorder($sortBy, $sortOrder === 'asc' ? 'asc' : 'desc');
+            }
+        }
+
+        return response()->json($query->paginate((int) $request->integer('per_page', 15)));
     }
 
     public function store(Request $request): JsonResponse
@@ -155,5 +184,21 @@ class FamiliaController extends Controller
         });
 
         return response()->json($familia->fresh(['registradoPor', 'referente']));
+    }
+
+    public function evaluarPrioridad(Request $request, Familia $familia): JsonResponse
+    {
+        $data = $request->validate([
+            'puntaje_menores' => ['required', 'integer', 'in:0,1,2'],
+            'puntaje_alimentacion' => ['required', 'integer', 'in:0,2,3'],
+            'puntaje_asistencia' => ['required', 'integer', 'in:0,1,2'],
+            'puntaje_participacion' => ['required', 'integer', 'in:0,1,2'],
+        ]);
+
+        $service = app(PriorizacionSocialService::class);
+
+        $familia = $service->evaluar($familia, $data, $request->user());
+
+        return response()->json($familia);
     }
 }

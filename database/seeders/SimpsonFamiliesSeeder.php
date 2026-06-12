@@ -27,11 +27,11 @@ class SimpsonFamiliesSeeder extends Seeder
                 'fecha_ingreso' => '2024-01-15',
                 'activa' => true,
                 'integrantes' => [
-                    ['nombre' => 'Homer', 'apellido' => 'Simpson', 'fecha_nacimiento' => '1956-05-12', 'tipo_documento' => 'DNI', 'numero_documento' => 'SIM-001', 'categoria_etaria' => 'ADULTO', 'referente' => true],
-                    ['nombre' => 'Marge', 'apellido' => 'Simpson', 'fecha_nacimiento' => '1956-03-19', 'tipo_documento' => 'DNI', 'numero_documento' => 'SIM-002', 'categoria_etaria' => 'ADULTO', 'referente' => false],
-                    ['nombre' => 'Bart', 'apellido' => 'Simpson', 'fecha_nacimiento' => '1980-04-01', 'tipo_documento' => 'DNI', 'numero_documento' => 'SIM-003', 'categoria_etaria' => 'MENOR', 'referente' => false],
-                    ['nombre' => 'Lisa', 'apellido' => 'Simpson', 'fecha_nacimiento' => '1982-05-09', 'tipo_documento' => 'DNI', 'numero_documento' => 'SIM-004', 'categoria_etaria' => 'MENOR', 'referente' => false],
-                    ['nombre' => 'Maggie', 'apellido' => 'Simpson', 'fecha_nacimiento' => '1988-01-12', 'tipo_documento' => 'DNI', 'numero_documento' => 'SIM-005', 'categoria_etaria' => 'BEBE', 'referente' => false],
+                    ['nombre' => 'Homer', 'apellido' => 'Simpson', 'fecha_nacimiento' => '1956-05-12', 'tipo_documento' => 'DNI', 'numero_documento' => 'SIM-001', 'referente' => true],
+                    ['nombre' => 'Marge', 'apellido' => 'Simpson', 'fecha_nacimiento' => '1956-03-19', 'tipo_documento' => 'DNI', 'numero_documento' => 'SIM-002', 'referente' => false],
+                    ['nombre' => 'Bart', 'apellido' => 'Simpson', 'fecha_nacimiento' => '2010-04-01', 'tipo_documento' => 'DNI', 'numero_documento' => 'SIM-003', 'referente' => false],
+                    ['nombre' => 'Lisa', 'apellido' => 'Simpson', 'fecha_nacimiento' => '2012-05-09', 'tipo_documento' => 'DNI', 'numero_documento' => 'SIM-004', 'referente' => false],
+                    ['nombre' => 'Maggie', 'apellido' => 'Simpson', 'fecha_nacimiento' => '2018-01-12', 'tipo_documento' => 'DNI', 'numero_documento' => 'SIM-005', 'referente' => false],
                 ],
             ],
             [
@@ -43,9 +43,9 @@ class SimpsonFamiliesSeeder extends Seeder
                 'fecha_ingreso' => '2024-02-10',
                 'activa' => true,
                 'integrantes' => [
-                    ['nombre' => 'Ned', 'apellido' => 'Flanders', 'fecha_nacimiento' => '1959-02-01', 'tipo_documento' => 'DNI', 'numero_documento' => 'FLA-001', 'categoria_etaria' => 'ADULTO', 'referente' => true],
-                    ['nombre' => 'Rod', 'apellido' => 'Flanders', 'fecha_nacimiento' => '1985-07-07', 'tipo_documento' => 'DNI', 'numero_documento' => 'FLA-002', 'categoria_etaria' => 'MENOR', 'referente' => false],
-                    ['nombre' => 'Todd', 'apellido' => 'Flanders', 'fecha_nacimiento' => '1987-09-15', 'tipo_documento' => 'DNI', 'numero_documento' => 'FLA-003', 'categoria_etaria' => 'MENOR', 'referente' => false],
+                    ['nombre' => 'Ned', 'apellido' => 'Flanders', 'fecha_nacimiento' => '1959-02-01', 'tipo_documento' => 'DNI', 'numero_documento' => 'FLA-001', 'referente' => true],
+                    ['nombre' => 'Rod', 'apellido' => 'Flanders', 'fecha_nacimiento' => '2011-07-07', 'tipo_documento' => 'DNI', 'numero_documento' => 'FLA-002', 'referente' => false],
+                    ['nombre' => 'Todd', 'apellido' => 'Flanders', 'fecha_nacimiento' => '2013-09-15', 'tipo_documento' => 'DNI', 'numero_documento' => 'FLA-003', 'referente' => false],
                 ],
             ],
             [
@@ -57,9 +57,9 @@ class SimpsonFamiliesSeeder extends Seeder
                 'fecha_ingreso' => '2024-03-05',
                 'activa' => true,
                 'integrantes' => [
-                    ['nombre' => 'Kirk', 'apellido' => 'Van Houten', 'fecha_nacimiento' => '1959-08-01', 'tipo_documento' => 'DNI', 'numero_documento' => 'VAN-001', 'categoria_etaria' => 'ADULTO', 'referente' => true],
-                    ['nombre' => 'Luann', 'apellido' => 'Van Houten', 'fecha_nacimiento' => '1960-10-15', 'tipo_documento' => 'DNI', 'numero_documento' => 'VAN-002', 'categoria_etaria' => 'ADULTO', 'referente' => false],
-                    ['nombre' => 'Milhouse', 'apellido' => 'Van Houten', 'fecha_nacimiento' => '1980-02-20', 'tipo_documento' => 'DNI', 'numero_documento' => 'VAN-003', 'categoria_etaria' => 'MENOR', 'referente' => false],
+                    ['nombre' => 'Kirk', 'apellido' => 'Van Houten', 'fecha_nacimiento' => '1959-08-01', 'tipo_documento' => 'DNI', 'numero_documento' => 'VAN-001', 'referente' => true],
+                    ['nombre' => 'Luann', 'apellido' => 'Van Houten', 'fecha_nacimiento' => '1960-10-15', 'tipo_documento' => 'DNI', 'numero_documento' => 'VAN-002', 'referente' => false],
+                    ['nombre' => 'Milhouse', 'apellido' => 'Van Houten', 'fecha_nacimiento' => '2011-02-20', 'tipo_documento' => 'DNI', 'numero_documento' => 'VAN-003', 'referente' => false],
                 ],
             ],
             [
@@ -71,9 +71,9 @@ class SimpsonFamiliesSeeder extends Seeder
                 'fecha_ingreso' => '2024-04-20',
                 'activa' => true,
                 'integrantes' => [
-                    ['nombre' => 'Clancy', 'apellido' => 'Wiggum', 'fecha_nacimiento' => '1954-01-21', 'tipo_documento' => 'DNI', 'numero_documento' => 'WIG-001', 'categoria_etaria' => 'ADULTO', 'referente' => true],
-                    ['nombre' => 'Sarah', 'apellido' => 'Wiggum', 'fecha_nacimiento' => '1956-11-02', 'tipo_documento' => 'DNI', 'numero_documento' => 'WIG-002', 'categoria_etaria' => 'ADULTO', 'referente' => false],
-                    ['nombre' => 'Ralph', 'apellido' => 'Wiggum', 'fecha_nacimiento' => '1980-02-28', 'tipo_documento' => 'DNI', 'numero_documento' => 'WIG-003', 'categoria_etaria' => 'MENOR', 'referente' => false],
+                    ['nombre' => 'Clancy', 'apellido' => 'Wiggum', 'fecha_nacimiento' => '1954-01-21', 'tipo_documento' => 'DNI', 'numero_documento' => 'WIG-001', 'referente' => true],
+                    ['nombre' => 'Sarah', 'apellido' => 'Wiggum', 'fecha_nacimiento' => '1956-11-02', 'tipo_documento' => 'DNI', 'numero_documento' => 'WIG-002', 'referente' => false],
+                    ['nombre' => 'Ralph', 'apellido' => 'Wiggum', 'fecha_nacimiento' => '2012-02-28', 'tipo_documento' => 'DNI', 'numero_documento' => 'WIG-003', 'referente' => false],
                 ],
             ],
             [
@@ -85,8 +85,8 @@ class SimpsonFamiliesSeeder extends Seeder
                 'fecha_ingreso' => '2024-05-11',
                 'activa' => true,
                 'integrantes' => [
-                    ['nombre' => 'Julius', 'apellido' => 'Hibbert', 'fecha_nacimiento' => '1952-09-18', 'tipo_documento' => 'DNI', 'numero_documento' => 'HIB-001', 'categoria_etaria' => 'ADULTO', 'referente' => true],
-                    ['nombre' => 'Bernice', 'apellido' => 'Hibbert', 'fecha_nacimiento' => '1954-06-24', 'tipo_documento' => 'DNI', 'numero_documento' => 'HIB-002', 'categoria_etaria' => 'ADULTO', 'referente' => false],
+                    ['nombre' => 'Julius', 'apellido' => 'Hibbert', 'fecha_nacimiento' => '1952-09-18', 'tipo_documento' => 'DNI', 'numero_documento' => 'HIB-001', 'referente' => true],
+                    ['nombre' => 'Bernice', 'apellido' => 'Hibbert', 'fecha_nacimiento' => '1954-06-24', 'tipo_documento' => 'DNI', 'numero_documento' => 'HIB-002', 'referente' => false],
                 ],
             ],
         ];
@@ -114,6 +114,43 @@ class SimpsonFamiliesSeeder extends Seeder
             }
 
             $familia->forceFill(['referente_id' => $referenteId])->save();
+            $familia->recalcular_puntaje_menores();
+        }
+
+        $evaluaciones = [
+            ['direccion' => '742 Evergreen Terrace', 'puntaje_menores' => 2, 'puntaje_alimentacion' => 2, 'puntaje_asistencia' => 2, 'puntaje_participacion' => 2],
+            ['direccion' => '744 Evergreen Terrace', 'puntaje_menores' => 1, 'puntaje_alimentacion' => 2, 'puntaje_asistencia' => 1, 'puntaje_participacion' => 1],
+            ['direccion' => 'Apartment 2A, 33 Spooner Street', 'puntaje_menores' => 1, 'puntaje_alimentacion' => 3, 'puntaje_asistencia' => 0, 'puntaje_participacion' => 0],
+            ['direccion' => 'Wiggum Residence', 'puntaje_menores' => 1, 'puntaje_alimentacion' => 0, 'puntaje_asistencia' => 0, 'puntaje_participacion' => 0],
+            ['direccion' => 'Hibbert Residence', 'puntaje_menores' => 0, 'puntaje_alimentacion' => 2, 'puntaje_asistencia' => 1, 'puntaje_participacion' => 1],
+        ];
+
+        $coordinador = Usuario::query()->firstWhere('email', 'coordinador@example.com');
+        $evaluador = $coordinador ?? $adminUser;
+
+        foreach ($evaluaciones as $eval) {
+            $familia = Familia::query()->where('direccion', $eval['direccion'])->first();
+            if ($familia === null) continue;
+
+            $total = $eval['puntaje_menores'] + $eval['puntaje_alimentacion'] + $eval['puntaje_asistencia'] + $eval['puntaje_participacion'];
+            $nivel = $eval['puntaje_participacion'] === 2 ? 'muy_alta' : match (true) {
+                $total >= 8 => 'muy_alta',
+                $total >= 6 => 'alta',
+                $total >= 4 => 'media',
+                $total >= 2 => 'baja',
+                default => 'muy_baja',
+            };
+
+            $familia->forceFill([
+                'puntaje_prioridad' => $total,
+                'prioridad_social' => $nivel,
+                'puntaje_menores' => $eval['puntaje_menores'],
+                'puntaje_alimentacion' => $eval['puntaje_alimentacion'],
+                'puntaje_asistencia' => $eval['puntaje_asistencia'],
+                'puntaje_participacion' => $eval['puntaje_participacion'],
+                'evaluado_por' => $evaluador->id_usuario,
+                'fecha_ultima_evaluacion' => '2026-06-08',
+            ])->save();
         }
     }
 }
