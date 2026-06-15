@@ -24,7 +24,6 @@ class ParticipacionComision extends Model
     {
         return [
             'fecha_inicio' => 'date',
-            'estado' => 'boolean',
         ];
     }
 

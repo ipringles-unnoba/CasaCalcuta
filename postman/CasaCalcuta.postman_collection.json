@@ -2110,7 +2110,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"fecha_inicio\": \"2026-06-04\",\n  \"estado\": true,\n  \"observaciones\": \"Alta de ejemplo\",\n  \"integrante_id\": {{integrante_id}},\n  \"comision_id\": {{comision_id}}\n}"
+              "raw": "{\n  \"fecha_inicio\": \"2026-06-04\",\n  \"estado\": \"activo\",\n  \"observaciones\": \"Alta de ejemplo\",\n  \"integrante_id\": {{integrante_id}},\n  \"comision_id\": {{comision_id}}\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/participaciones-comision",
@@ -2141,7 +2141,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"fecha_inicio\": \"2026-06-04\",\n  \"estado\": true,\n  \"observaciones\": \"Alta de ejemplo\",\n  \"integrante_id\": {{integrante_id}},\n  \"comision_id\": {{comision_id}}\n}"
+              "raw": "{\n  \"fecha_inicio\": \"2026-06-04\",\n  \"estado\": \"activo\",\n  \"observaciones\": \"Alta de ejemplo\",\n  \"integrante_id\": {{integrante_id}},\n  \"comision_id\": {{comision_id}}\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/participaciones-comision/{{participacion_comision_id}}",

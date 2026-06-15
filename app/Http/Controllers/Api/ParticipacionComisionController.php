@@ -14,6 +14,10 @@ class ParticipacionComisionController extends Controller
 {
     use CrudController;
 
+    private const VIEW_PERMISSIONS = ['Ver comisiones', 'Gestionar comisiones'];
+
+    private const MANAGE_PERMISSION = ['Gestionar comisiones'];
+
     protected function modelClass(): string
     {
         return ParticipacionComision::class;
@@ -28,7 +32,7 @@ class ParticipacionComisionController extends Controller
     {
         return [
             'fecha_inicio' => ['required', 'date'],
-            'estado' => ['required', 'boolean'],
+            'estado' => ['required', 'string', 'in:activo,inactivo,ocasional'],
             'observaciones' => ['nullable', 'string', 'max:255'],
             'integrante_id' => ['required', 'integer', 'exists:integrantes,id_integrante'],
             'comision_id' => ['required', 'integer', 'exists:comisiones,id_comision'],
@@ -39,7 +43,7 @@ class ParticipacionComisionController extends Controller
     {
         return [
             'fecha_inicio' => ['sometimes', 'required', 'date'],
-            'estado' => ['sometimes', 'required', 'boolean'],
+            'estado' => ['sometimes', 'required', 'string', 'in:activo,inactivo,ocasional'],
             'observaciones' => ['nullable', 'string', 'max:255'],
             'integrante_id' => ['sometimes', 'required', 'integer', 'exists:integrantes,id_integrante'],
             'comision_id' => ['sometimes', 'required', 'integer', 'exists:comisiones,id_comision'],
@@ -48,26 +52,67 @@ class ParticipacionComisionController extends Controller
 
     public function index(Request $request): JsonResponse
     {
+        if ($response = $this->authorizePermission($request, self::VIEW_PERMISSIONS)) {
+            return $response;
+        }
+
         return $this->indexRecords($request);
     }
 
     public function store(Request $request): JsonResponse
     {
+        if ($response = $this->authorizePermission($request, self::MANAGE_PERMISSION)) {
+            return $response;
+        }
+
         return $this->storeRecord($request);
     }
 
     public function show(ParticipacionComision $participacionComision): JsonResponse
     {
+        if ($response = $this->authorizePermission(request(), self::VIEW_PERMISSIONS)) {
+            return $response;
+        }
+
         return $this->showRecord($participacionComision);
     }
 
     public function update(Request $request, ParticipacionComision $participacionComision): JsonResponse
     {
+        if ($response = $this->authorizePermission($request, self::MANAGE_PERMISSION)) {
+            return $response;
+        }
+
         return $this->updateRecord($request, $participacionComision);
     }
 
     public function destroy(ParticipacionComision $participacionComision): Response
     {
+        if ($response = $this->authorizePermission(request(), self::MANAGE_PERMISSION)) {
+            return $response;
+        }
+
         return $this->destroyRecord($participacionComision);
+    }
+
+    private function authorizePermission(Request $request, array $requiredPermissions): ?JsonResponse
+    {
+        $usuario = $request->user();
+
+        if ($usuario === null) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
+        }
+
+        $usuario->loadMissing('rol.permisos');
+        $permissions = $usuario->rol?->permisos ?? collect();
+        $requiredPermissions = array_map('mb_strtolower', $requiredPermissions);
+
+        foreach ($permissions as $permiso) {
+            if (in_array(mb_strtolower($permiso->nombre), $requiredPermissions, true)) {
+                return null;
+            }
+        }
+
+        return response()->json(['message' => 'Acceso no autorizado. Falta el permiso: ' . implode(' o ', $requiredPermissions) . '.'], 403);
     }
 }

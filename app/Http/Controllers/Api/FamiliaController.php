@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Api\Concerns\CrudController;
 use App\Http\Controllers\Api\Concerns\AuthenticatedRegistrar;
 use App\Http\Controllers\Controller;
-use App\Models\Integrante;
 use App\Models\Familia;
+use App\Models\Integrante;
 use App\Services\PriorizacionSocialService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
@@ -296,6 +296,22 @@ class FamiliaController extends Controller
         });
 
         return response()->json($familia->fresh(['registradoPor', 'referente']));
+    }
+
+    public function comisiones(Familia $familia): JsonResponse
+    {
+        if ($response = $this->authorizeFamilyPermissions(request(), self::VIEW_PERMISSIONS)) {
+            return $response;
+        }
+
+        $familia->loadMissing('integrantes.participacionesComision.comision');
+
+        $comisiones = $familia->integrantes
+            ->flatMap(fn (Integrante $integrante) => $integrante->participacionesComision)
+            ->sortByDesc('id_participacion_comision')
+            ->values();
+
+        return response()->json($comisiones);
     }
 
     public function evaluarPrioridad(Request $request, Familia $familia): JsonResponse
