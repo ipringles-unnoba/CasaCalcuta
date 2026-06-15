@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\AutorizacionController;
 use App\Http\Controllers\Api\AuditoriaController;
 use App\Http\Controllers\Api\ComisionController;
+use App\Http\Controllers\Api\CumpleanoController;
 use App\Http\Controllers\Api\DonacionController;
 use App\Http\Controllers\Api\DocumentoController;
 use App\Http\Controllers\Api\FamiliaController;
@@ -70,4 +71,9 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('documentos', DocumentoController::class);
     Route::get('documentos/{documento}/integrantes', [DocumentoController::class, 'integrantes']);
     Route::post('documentos/{documento}/integrantes/sync', [DocumentoController::class, 'syncIntegrantes']);
+
+    Route::prefix('cumpleanos')->group(function () {
+        Route::get('proximos', [CumpleanoController::class, 'proximos']);
+        Route::get('mes', [CumpleanoController::class, 'mes']);
+    });
 });

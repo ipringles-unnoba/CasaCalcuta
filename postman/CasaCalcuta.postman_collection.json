@@ -2940,6 +2940,71 @@
       ]
     },
     {
+      "name": "cumpleanos",
+      "item": [
+        {
+          "name": "Proximos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/cumpleanos/proximos?dias=7",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cumpleanos",
+                "proximos"
+              ],
+              "query": [
+                {
+                  "key": "dias",
+                  "value": "7"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Por mes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/cumpleanos/mes?mes=6",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cumpleanos",
+                "mes"
+              ],
+              "query": [
+                {
+                  "key": "mes",
+                  "value": "6"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "priorizacion",
       "item": [
         {

@@ -95,6 +95,30 @@ class Integrante extends Model
         $this->familiaIdOriginal = null;
     }
 
+    public function scopeProximosCumpleanos($query, int $dias = 7)
+    {
+        $startMD = now()->format('m-d');
+        $endMD = now()->addDays($dias)->format('m-d');
+
+        if ($startMD <= $endMD) {
+            $query->whereRaw("DATE_FORMAT(fecha_nacimiento, '%m-%d') BETWEEN ? AND ?", [$startMD, $endMD]);
+        } else {
+            $query->where(function ($q) use ($startMD, $endMD): void {
+                $q->whereRaw("DATE_FORMAT(fecha_nacimiento, '%m-%d') >= ?", [$startMD])
+                  ->orWhereRaw("DATE_FORMAT(fecha_nacimiento, '%m-%d') <= ?", [$endMD]);
+            });
+        }
+
+        return $query;
+    }
+
+    public function scopeCumpleanosDelMes($query, ?int $mes = null)
+    {
+        $mes = $mes ?? now()->month;
+
+        return $query->whereRaw('MONTH(fecha_nacimiento) = ?', [$mes]);
+    }
+
     public function familia(): BelongsTo
     {
         return $this->belongsTo(Familia::class, 'familia_id', 'id_familia');
