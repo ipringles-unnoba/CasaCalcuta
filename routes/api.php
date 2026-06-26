@@ -38,6 +38,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::apiResource('permisos', PermisoController::class)->parameters(['permisos' => 'permiso']);
     Route::apiResource('notificaciones', NotificacionController::class)->parameters(['notificaciones' => 'notificacion']);
+    Route::post('notificaciones/{notificacion}/visto', [NotificacionController::class, 'visto']);
     Route::apiResource('familias', FamiliaController::class);
     Route::get('familias/{familia}/referente', [FamiliaController::class, 'referente']);
     Route::put('familias/{familia}/referente', [FamiliaController::class, 'syncReferente']);

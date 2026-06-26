@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "c77f202c-8143-4bdf-b8a1-8152635b9bc2",
+    "_postman_id": "bdb3d626-34b4-4ee0-80e5-3e6cf006bf2e",
     "name": "CasaCalcuta API",
     "description": "Colección del backend API de CasaCalcuta.\n\n## Flujo\n\n1. Ejecutar `auth/login`.\n2. Usar `access_token` para los endpoints protegidos.\n3. Crear primero entidades base (`usuarios`, `familias`, `comisiones`, etc.) y luego sus relaciones.\n\n## Variables\n\nUsar `{{base_url}}` y los ids de entorno para probar los endpoints.\n\n## Notas\n\n- La API responde JSON.\n- `contrasena` se envía en texto plano y Laravel la hashea.\n- Los endpoints protegidos usan `Bearer {{access_token}}`.\n- `auditorias` es solo lectura.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -822,6 +822,31 @@
                 "api",
                 "notificaciones",
                 "{{notificacion_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Marcar como visto",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/notificaciones/{{notificacion_id}}/visto",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "notificaciones",
+                "{{notificacion_id}}",
+                "visto"
               ]
             }
           },

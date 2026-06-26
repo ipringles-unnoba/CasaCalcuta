@@ -8,13 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Database\Factories\NotificacionFactory;
 
-#[Fillable(['fecha', 'motivo'])]
+#[Fillable(['fecha', 'motivo', 'visto'])]
 class Notificacion extends Model
 {
     /** @use HasFactory<NotificacionFactory> */
     use HasFactory;
 
-    protected $fillable = ['fecha', 'motivo'];
+    protected $fillable = ['fecha', 'motivo', 'visto'];
+
+    protected $attributes = [
+        'visto' => false,
+    ];
 
     protected $table = 'notificaciones';
 
@@ -24,6 +28,7 @@ class Notificacion extends Model
     {
         return [
             'fecha' => 'date',
+            'visto' => 'boolean',
         ];
     }
 

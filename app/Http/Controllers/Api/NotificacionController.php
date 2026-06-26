@@ -49,7 +49,11 @@ class NotificacionController extends Controller
         }
 
         return response()->json(
-            $usuario->notificaciones()->with('usuarios')->latest('id_notificacion')->paginate((int) $request->integer('per_page', 15))
+            $usuario->notificaciones()
+                ->where('visto', false)
+                ->with('usuarios')
+                ->latest('id_notificacion')
+                ->paginate((int) $request->integer('per_page', 15))
         );
     }
 
@@ -66,6 +70,23 @@ class NotificacionController extends Controller
     public function update(Request $request, Notificacion $notificacion): JsonResponse
     {
         return $this->updateRecord($request, $notificacion);
+    }
+
+    public function visto(Request $request, Notificacion $notificacion): JsonResponse
+    {
+        $usuario = $request->user();
+
+        if ($usuario === null) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
+        }
+
+        if (! $usuario->notificaciones()->whereKey($notificacion->getKey())->exists()) {
+            return response()->json(['message' => 'Notificación no encontrada.'], 404);
+        }
+
+        $notificacion->forceFill(['visto' => true])->save();
+
+        return response()->json($notificacion->load('usuarios'));
     }
 
     public function destroy(Notificacion $notificacion): Response

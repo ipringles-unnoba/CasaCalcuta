@@ -17,6 +17,7 @@ class NotificacionFactory extends Factory
         return [
             'fecha' => now()->toDateString(),
             'motivo' => fake()->sentence(),
+            'visto' => false,
         ];
     }
 }
