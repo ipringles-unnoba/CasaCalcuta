@@ -88,7 +88,11 @@ jobs:
           mkdir -p resources/views
           touch resources/views/.gitkeep
 
-          composer install --no-dev --optimize-autoloader
+          php8.5 -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+          php8.5 composer-setup.php --install-dir=/tmp --filename=composer.phar
+          rm composer-setup.php
+
+          php8.5 /tmp/composer.phar install --no-dev --optimize-autoloader --no-interaction
           php8.5 artisan optimize:clear
           php8.5 artisan storage:link || true
           php8.5 artisan optimize
