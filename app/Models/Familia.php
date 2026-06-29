@@ -174,6 +174,7 @@ class Familia extends Model
         if (
             $this->participacion_merendero === 'activa'
             && mb_strtoupper((string) $this->estado_lista) === 'PRINCIPAL'
+            && mb_strtolower((string) $this->prioridad_social) === 'muy_alta'
         ) {
             return $this->refresh();
         }
@@ -181,6 +182,7 @@ class Familia extends Model
         $this->forceFill([
             'participacion_merendero' => 'activa',
             'estado_lista' => 'PRINCIPAL',
+            'prioridad_social' => 'muy_alta',
         ])->save();
 
         return $this->refresh();

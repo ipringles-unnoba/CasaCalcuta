@@ -40,7 +40,7 @@ class PriorizacionSocialService
 
         $puntajeTotal = $puntajeMenores + $puntajeAlimentacion + $puntajeAsistencia + $puntajeParticipacion;
 
-        $nivel = $this->obtenerNivel($puntajeTotal);
+        $nivel = $participacionComisionActiva ? 'muy_alta' : $this->obtenerNivel($puntajeTotal);
 
         return [
             'situacion_alimentaria' => $situacionAlimentaria,

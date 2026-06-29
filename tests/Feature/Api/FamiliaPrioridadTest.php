@@ -107,7 +107,7 @@ class FamiliaPrioridadTest extends TestCase
             ->assertJsonPath('puntaje_asistencia', 1)
             ->assertJsonPath('puntaje_participacion', 2)
             ->assertJsonPath('puntaje_prioridad', 6)
-            ->assertJsonPath('prioridad_social', 'alta')
+            ->assertJsonPath('prioridad_social', 'muy_alta')
             ->assertJsonPath('estado_lista', 'PRINCIPAL')
             ->assertJsonMissingPath('participacion_activa_validada');
 
@@ -117,7 +117,7 @@ class FamiliaPrioridadTest extends TestCase
             'frecuencia_asistencia' => 'semanal',
             'participacion_merendero' => 'activa',
             'puntaje_prioridad' => 6,
-            'prioridad_social' => 'alta',
+            'prioridad_social' => 'muy_alta',
             'estado_lista' => 'PRINCIPAL',
         ]);
 
