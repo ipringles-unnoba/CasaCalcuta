@@ -11,15 +11,33 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
-#[Fillable(['direccion', 'telefono', 'puntaje_prioridad', 'prioridad_social', 'estado_lista', 'fecha_ingreso', 'activa', 'registrado_por', 'referente_id', 'puntaje_menores', 'puntaje_alimentacion', 'puntaje_asistencia', 'puntaje_participacion', 'situacion_alimentaria', 'frecuencia_asistencia', 'participacion_merendero', 'evaluado_por', 'fecha_ultima_evaluacion'])]
+#[Fillable(['direccion', 'telefono', 'puntaje_prioridad', 'prioridad_social', 'estado_lista', 'fecha_ingreso', 'activa', 'registrado_por', 'referente_id', 'situacion_alimentaria', 'frecuencia_asistencia', 'participacion_merendero', 'evaluado_por', 'fecha_ultima_evaluacion'])]
 class Familia extends Model
 {
     /** @use HasFactory<FamiliaFactory> */
     use HasFactory;
 
-    protected $fillable = ['direccion', 'telefono', 'puntaje_prioridad', 'prioridad_social', 'estado_lista', 'fecha_ingreso', 'activa', 'registrado_por', 'referente_id', 'puntaje_menores', 'puntaje_alimentacion', 'puntaje_asistencia', 'puntaje_participacion', 'situacion_alimentaria', 'frecuencia_asistencia', 'participacion_merendero', 'evaluado_por', 'fecha_ultima_evaluacion'];
+    private const SITUACION_ALIMENTARIA_PUNTAJES = [
+        'sin_urgencia' => 0,
+        'moderada' => 2,
+        'urgente' => 3,
+    ];
 
-    protected $appends = ['porciones_comida', 'ausentismo_critico'];
+    private const FRECUENCIA_ASISTENCIA_PUNTAJES = [
+        'ocasional' => 0,
+        'semanal' => 1,
+        'mas_de_una_vez' => 2,
+    ];
+
+    private const PARTICIPACION_MERENDERO_PUNTAJES = [
+        'no_participa' => 0,
+        'ocasional' => 1,
+        'activa' => 2,
+    ];
+
+    protected $fillable = ['direccion', 'telefono', 'puntaje_prioridad', 'prioridad_social', 'estado_lista', 'fecha_ingreso', 'activa', 'registrado_por', 'referente_id', 'situacion_alimentaria', 'frecuencia_asistencia', 'participacion_merendero', 'evaluado_por', 'fecha_ultima_evaluacion'];
+
+    protected $appends = ['porciones_comida', 'ausentismo_critico', 'puntaje_menores', 'puntaje_alimentacion', 'puntaje_asistencia', 'puntaje_participacion'];
 
     protected $table = 'familias';
 
@@ -31,10 +49,6 @@ class Familia extends Model
             'fecha_ingreso' => 'date',
             'activa' => 'boolean',
             'puntaje_prioridad' => 'integer',
-            'puntaje_menores' => 'integer',
-            'puntaje_alimentacion' => 'integer',
-            'puntaje_asistencia' => 'integer',
-            'puntaje_participacion' => 'integer',
             'fecha_ultima_evaluacion' => 'date',
         ];
     }
@@ -63,6 +77,34 @@ class Familia extends Model
         return Attribute::make(
             get: fn (): bool => mb_strtoupper((string) $this->estado_lista) === 'PRINCIPAL'
                 && $this->currentAbsenceStreak()['count'] >= $this->ausentismoCriticoThreshold(),
+        );
+    }
+
+    protected function puntajeMenores(): Attribute
+    {
+        return Attribute::make(
+            get: fn (): int => $this->calcularPuntajeMenoresInterno(),
+        );
+    }
+
+    protected function puntajeAlimentacion(): Attribute
+    {
+        return Attribute::make(
+            get: fn (): int => self::SITUACION_ALIMENTARIA_PUNTAJES[$this->situacion_alimentaria ?? 'sin_urgencia'] ?? 0,
+        );
+    }
+
+    protected function puntajeAsistencia(): Attribute
+    {
+        return Attribute::make(
+            get: fn (): int => self::FRECUENCIA_ASISTENCIA_PUNTAJES[$this->frecuencia_asistencia ?? 'ocasional'] ?? 0,
+        );
+    }
+
+    protected function puntajeParticipacion(): Attribute
+    {
+        return Attribute::make(
+            get: fn (): int => self::PARTICIPACION_MERENDERO_PUNTAJES[$this->participacionMerenderoEfectiva()] ?? 0,
         );
     }
 
@@ -144,6 +186,12 @@ class Familia extends Model
         return $this->refresh();
     }
 
+    public function recalcular_puntaje_menores(): self
+    {
+        // El puntaje ahora se calcula al leer; se conserva por compatibilidad.
+        return $this->refresh();
+    }
+
     private function currentAbsenceStreak(): array
     {
         $count = 0;
@@ -174,21 +222,26 @@ class Familia extends Model
         return max(1, (int) env('AUSENTISMO_CRITICO', 3));
     }
 
-    public function recalcular_puntaje_menores(): self
+    private function calcularPuntajeMenoresInterno(): int
     {
         $cantidadMenores = $this->integrantes()
             ->get()
             ->filter(fn (Integrante $integrante): bool => $integrante->categoria_etaria === 'MENOR')
             ->count();
 
-        $puntajeMenores = match (true) {
+        return match (true) {
             $cantidadMenores === 0 => 0,
             $cantidadMenores <= 2 => 1,
             default => 2,
         };
+    }
 
-        $this->forceFill(['puntaje_menores' => $puntajeMenores])->save();
+    private function participacionMerenderoEfectiva(): string
+    {
+        if ($this->tieneParticipacionComisionActiva()) {
+            return 'activa';
+        }
 
-        return $this->refresh();
+        return (string) ($this->participacion_merendero ?? 'no_participa');
     }
 }

@@ -8,6 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (Schema::hasColumn('notificaciones', 'visto')) {
+            return;
+        }
+
         Schema::table('notificaciones', function (Blueprint $table): void {
             $table->boolean('visto')->default(false)->after('motivo');
         });
@@ -15,6 +19,10 @@ return new class extends Migration
 
     public function down(): void
     {
+        if (! Schema::hasColumn('notificaciones', 'visto')) {
+            return;
+        }
+
         Schema::table('notificaciones', function (Blueprint $table): void {
             $table->dropColumn('visto');
         });
