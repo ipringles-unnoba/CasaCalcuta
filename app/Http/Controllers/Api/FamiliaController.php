@@ -40,12 +40,9 @@ class FamiliaController extends Controller
         return [
             'direccion' => ['required', 'string', 'max:255'],
             'telefono' => ['required', 'string', 'max:50'],
-            'puntaje_prioridad' => ['sometimes', 'nullable', 'integer', 'min:0'],
-            'prioridad_social' => ['sometimes', 'nullable', 'string', 'max:255'],
             'estado_lista' => ['required', 'string', 'max:255'],
             'fecha_ingreso' => ['required', 'date'],
             'activa' => ['required', 'boolean'],
-            'registrado_por' => ['sometimes', 'integer', 'exists:usuarios,id_usuario'],
         ];
     }
 
@@ -54,18 +51,9 @@ class FamiliaController extends Controller
         return [
             'direccion' => ['sometimes', 'required', 'string', 'max:255'],
             'telefono' => ['sometimes', 'required', 'string', 'max:50'],
-            'puntaje_prioridad' => ['sometimes', 'nullable', 'integer', 'min:0'],
-            'prioridad_social' => ['sometimes', 'nullable', 'string', 'max:255'],
             'estado_lista' => ['sometimes', 'required', 'string', 'max:255'],
             'fecha_ingreso' => ['sometimes', 'required', 'date'],
             'activa' => ['sometimes', 'required', 'boolean'],
-            'registrado_por' => ['sometimes', 'integer', 'exists:usuarios,id_usuario'],
-            'referente_id' => [
-                'sometimes',
-                'nullable',
-                'integer',
-                Rule::exists('integrantes', 'id_integrante')->where('familia_id', $record->getKey()),
-            ],
         ];
     }
 
@@ -142,10 +130,9 @@ class FamiliaController extends Controller
     {
         $estadoAnterior = $familia->estado_lista;
         $validated = $request->validate($this->updateRules($familia));
-        $validated = $this->applyAuthenticatedRegistrar($request, $validated);
 
-        if ($validated instanceof JsonResponse) {
-            return $validated;
+        if ($validated === []) {
+            return response()->json(['message' => 'Debes enviar al menos un campo para actualizar.'], 422);
         }
 
         if (array_key_exists('estado_lista', $validated)) {
@@ -321,10 +308,10 @@ class FamiliaController extends Controller
         }
 
         $data = $request->validate([
-            'puntaje_menores' => ['required', 'integer', 'in:0,1,2'],
-            'puntaje_alimentacion' => ['required', 'integer', 'in:0,2,3'],
-            'puntaje_asistencia' => ['required', 'integer', 'in:0,1,2'],
-            'puntaje_participacion' => ['required', 'integer', 'in:0,1,2'],
+            'situacion_alimentaria' => ['required', 'string', 'in:sin_urgencia,moderada,urgente'],
+            'frecuencia_asistencia' => ['required', 'string', 'in:ocasional,semanal,mas_de_una_vez'],
+            'participacion_merendero' => ['required', 'string', 'in:no_participa,ocasional,activa'],
+            'participacion_activa_validada' => ['required', 'boolean'],
         ]);
 
         $service = app(PriorizacionSocialService::class);

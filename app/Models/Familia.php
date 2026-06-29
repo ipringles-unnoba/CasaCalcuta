@@ -10,13 +10,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['direccion', 'telefono', 'puntaje_prioridad', 'prioridad_social', 'estado_lista', 'fecha_ingreso', 'activa', 'registrado_por', 'referente_id', 'puntaje_menores', 'puntaje_alimentacion', 'puntaje_asistencia', 'puntaje_participacion', 'evaluado_por', 'fecha_ultima_evaluacion'])]
+    #[Fillable(['direccion', 'telefono', 'puntaje_prioridad', 'prioridad_social', 'estado_lista', 'fecha_ingreso', 'activa', 'registrado_por', 'referente_id', 'puntaje_menores', 'puntaje_alimentacion', 'puntaje_asistencia', 'puntaje_participacion', 'situacion_alimentaria', 'frecuencia_asistencia', 'participacion_merendero', 'participacion_activa_validada', 'evaluado_por', 'fecha_ultima_evaluacion'])]
 class Familia extends Model
 {
     /** @use HasFactory<FamiliaFactory> */
     use HasFactory;
 
-    protected $fillable = ['direccion', 'telefono', 'puntaje_prioridad', 'prioridad_social', 'estado_lista', 'fecha_ingreso', 'activa', 'registrado_por', 'referente_id', 'puntaje_menores', 'puntaje_alimentacion', 'puntaje_asistencia', 'puntaje_participacion', 'evaluado_por', 'fecha_ultima_evaluacion'];
+    protected $fillable = ['direccion', 'telefono', 'puntaje_prioridad', 'prioridad_social', 'estado_lista', 'fecha_ingreso', 'activa', 'registrado_por', 'referente_id', 'puntaje_menores', 'puntaje_alimentacion', 'puntaje_asistencia', 'puntaje_participacion', 'situacion_alimentaria', 'frecuencia_asistencia', 'participacion_merendero', 'participacion_activa_validada', 'evaluado_por', 'fecha_ultima_evaluacion'];
 
     protected $appends = ['porciones_comida', 'ausentismo_critico'];
 
@@ -34,6 +34,7 @@ class Familia extends Model
             'puntaje_alimentacion' => 'integer',
             'puntaje_asistencia' => 'integer',
             'puntaje_participacion' => 'integer',
+            'participacion_activa_validada' => 'boolean',
             'fecha_ultima_evaluacion' => 'date',
         ];
     }
@@ -125,10 +126,16 @@ class Familia extends Model
 
     public function recalcular_puntaje_menores(): self
     {
-        $puntajeMenores = $this->integrantes()
+        $cantidadMenores = $this->integrantes()
             ->get()
             ->filter(fn (Integrante $integrante): bool => $integrante->categoria_etaria === 'MENOR')
             ->count();
+
+        $puntajeMenores = match (true) {
+            $cantidadMenores === 0 => 0,
+            $cantidadMenores <= 2 => 1,
+            default => 2,
+        };
 
         $this->forceFill(['puntaje_menores' => $puntajeMenores])->save();
 

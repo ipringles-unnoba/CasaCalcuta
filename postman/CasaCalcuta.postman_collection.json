@@ -926,7 +926,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"direccion\": \"Direccion de ejemplo\",\n  \"telefono\": \"123456\",\n  \"puntaje_prioridad\": 10,\n  \"prioridad_social\": \"ALTA\",\n  \"estado_lista\": \"PRINCIPAL\",\n  \"fecha_ingreso\": \"2026-06-04\",\n  \"activa\": true,\n  \"registrado_por\": {{usuario_id}}\n}"
+              "raw": "{\n  \"direccion\": \"Direccion de ejemplo\",\n  \"telefono\": \"123456\",\n  \"estado_lista\": \"ESPERA\",\n  \"fecha_ingreso\": \"2026-06-04\",\n  \"activa\": true\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/familias",
@@ -957,7 +957,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"direccion\": \"Direccion de ejemplo\",\n  \"telefono\": \"123456\",\n  \"puntaje_prioridad\": 10,\n  \"prioridad_social\": \"ALTA\",\n  \"estado_lista\": \"PRINCIPAL\",\n  \"fecha_ingreso\": \"2026-06-04\",\n  \"activa\": true,\n  \"registrado_por\": {{usuario_id}}\n}"
+              "raw": "{\n  \"direccion\": \"Direccion de ejemplo\",\n  \"telefono\": \"123456\",\n  \"estado_lista\": \"ESPERA\",\n  \"fecha_ingreso\": \"2026-06-04\",\n  \"activa\": true\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/familias/{{familia_id}}",
@@ -989,7 +989,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"estado_lista\": \"PRINCIPAL\" \n  //\"estado_lista\": \"ESPERA\",     //si se pasa una familia a ESPERA o INACTIVA se devuelve tambien\n  //\"estado_lista\": \"INACTIVA\",   // la lista de espera ordenada por el puntaje de prioridad\n  //\"registrado_por\": {{usuario_id}}\n}"
+              "raw": "{\n  \"estado_lista\": \"PRINCIPAL\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/familias/{{familia_id}}",
@@ -3080,6 +3080,10 @@
                   "const body = pm.response.json();",
                   "if (pm.response.code === 200) {",
                   "  pm.test('Prioridad calculada correctamente', () => {",
+                  "    pm.expect(body).to.have.property('situacion_alimentaria');",
+                  "    pm.expect(body).to.have.property('frecuencia_asistencia');",
+                  "    pm.expect(body).to.have.property('participacion_merendero');",
+                  "    pm.expect(body).to.have.property('participacion_activa_validada');",
                   "    pm.expect(body).to.have.property('prioridad_social');",
                   "    pm.expect(body).to.have.property('puntaje_prioridad');",
                   "    pm.expect(body).to.have.property('puntaje_menores');",
@@ -3089,7 +3093,7 @@
                   "    pm.expect(body).to.have.property('fecha_ultima_evaluacion');",
                   "    pm.expect(body).to.have.nested.property('evaluado_por.id_usuario');",
                   "    pm.expect(['muy_baja', 'baja', 'media', 'alta', 'muy_alta']).to.include(body.prioridad_social);",
-                  "    pm.expect(body.puntaje_prioridad).to.be.at.least(0);",
+                  "    pm.expect(body.puntaje_prioridad).to.equal(body.puntaje_menores + body.puntaje_alimentacion + body.puntaje_asistencia + body.puntaje_participacion);",
                   "  });",
                   "} else if (pm.response.code === 403) {",
                   "  pm.test('Acceso denegado - se requiere rol Administrador o Coordinador', () => {",
@@ -3114,7 +3118,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"puntaje_menores\": 2,\n  \"puntaje_alimentacion\": 2,\n  \"puntaje_asistencia\": 1,\n  \"puntaje_participacion\": 0\n}"
+              "raw": "{\n  \"situacion_alimentaria\": \"moderada\",\n  \"frecuencia_asistencia\": \"semanal\",\n  \"participacion_merendero\": \"ocasional\",\n  \"participacion_activa_validada\": false\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/familias/{{familia_id}}/evaluar-prioridad",
@@ -3142,7 +3146,12 @@
                   "const body = pm.response.json();",
                   "if (pm.response.code === 200) {",
                   "  pm.test('Prioridad automatica por participacion activa', () => {",
+                  "    pm.expect(body.situacion_alimentaria).to.equal('sin_urgencia');",
+                  "    pm.expect(body.frecuencia_asistencia).to.equal('ocasional');",
+                  "    pm.expect(body.participacion_merendero).to.equal('activa');",
+                  "    pm.expect(body.participacion_activa_validada).to.equal(true);",
                   "    pm.expect(body.prioridad_social).to.equal('muy_alta');",
+                  "    pm.expect(body.estado_lista).to.equal('PRINCIPAL');",
                   "    pm.expect(body.puntaje_participacion).to.equal(2);",
                   "  });",
                   "}"
@@ -3164,7 +3173,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"puntaje_menores\": 0,\n  \"puntaje_alimentacion\": 0,\n  \"puntaje_asistencia\": 0,\n  \"puntaje_participacion\": 2\n}"
+              "raw": "{\n  \"situacion_alimentaria\": \"sin_urgencia\",\n  \"frecuencia_asistencia\": \"ocasional\",\n  \"participacion_merendero\": \"activa\",\n  \"participacion_activa_validada\": true\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/familias/{{familia_id}}/evaluar-prioridad",

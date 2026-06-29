@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Familia;
 use App\Models\Integrante;
 use App\Models\Usuario;
+use App\Services\PriorizacionSocialService;
 use Illuminate\Database\Seeder;
 
 class SimpsonFamiliesSeeder extends Seeder
@@ -117,40 +118,53 @@ class SimpsonFamiliesSeeder extends Seeder
             $familia->recalcular_puntaje_menores();
         }
 
-        $evaluaciones = [
-            ['direccion' => '742 Evergreen Terrace', 'puntaje_menores' => 2, 'puntaje_alimentacion' => 2, 'puntaje_asistencia' => 2, 'puntaje_participacion' => 2],
-            ['direccion' => '744 Evergreen Terrace', 'puntaje_menores' => 1, 'puntaje_alimentacion' => 2, 'puntaje_asistencia' => 1, 'puntaje_participacion' => 1],
-            ['direccion' => 'Apartment 2A, 33 Spooner Street', 'puntaje_menores' => 1, 'puntaje_alimentacion' => 3, 'puntaje_asistencia' => 0, 'puntaje_participacion' => 0],
-            ['direccion' => 'Wiggum Residence', 'puntaje_menores' => 1, 'puntaje_alimentacion' => 0, 'puntaje_asistencia' => 0, 'puntaje_participacion' => 0],
-            ['direccion' => 'Hibbert Residence', 'puntaje_menores' => 0, 'puntaje_alimentacion' => 2, 'puntaje_asistencia' => 1, 'puntaje_participacion' => 1],
-        ];
-
         $coordinador = Usuario::query()->firstWhere('email', 'coordinador@example.com');
         $evaluador = $coordinador ?? $adminUser;
+        $service = app(PriorizacionSocialService::class);
+
+        $evaluaciones = [
+            [
+                'direccion' => '742 Evergreen Terrace',
+                'situacion_alimentaria' => 'moderada',
+                'frecuencia_asistencia' => 'mas_de_una_vez',
+                'participacion_merendero' => 'activa',
+                'participacion_activa_validada' => true,
+            ],
+            [
+                'direccion' => '744 Evergreen Terrace',
+                'situacion_alimentaria' => 'moderada',
+                'frecuencia_asistencia' => 'semanal',
+                'participacion_merendero' => 'ocasional',
+                'participacion_activa_validada' => false,
+            ],
+            [
+                'direccion' => 'Apartment 2A, 33 Spooner Street',
+                'situacion_alimentaria' => 'urgente',
+                'frecuencia_asistencia' => 'ocasional',
+                'participacion_merendero' => 'no_participa',
+                'participacion_activa_validada' => false,
+            ],
+            [
+                'direccion' => 'Wiggum Residence',
+                'situacion_alimentaria' => 'sin_urgencia',
+                'frecuencia_asistencia' => 'ocasional',
+                'participacion_merendero' => 'no_participa',
+                'participacion_activa_validada' => false,
+            ],
+            [
+                'direccion' => 'Hibbert Residence',
+                'situacion_alimentaria' => 'moderada',
+                'frecuencia_asistencia' => 'semanal',
+                'participacion_merendero' => 'ocasional',
+                'participacion_activa_validada' => false,
+            ],
+        ];
 
         foreach ($evaluaciones as $eval) {
             $familia = Familia::query()->where('direccion', $eval['direccion'])->first();
             if ($familia === null) continue;
 
-            $total = $eval['puntaje_menores'] + $eval['puntaje_alimentacion'] + $eval['puntaje_asistencia'] + $eval['puntaje_participacion'];
-            $nivel = $eval['puntaje_participacion'] === 2 ? 'muy_alta' : match (true) {
-                $total >= 8 => 'muy_alta',
-                $total >= 6 => 'alta',
-                $total >= 4 => 'media',
-                $total >= 2 => 'baja',
-                default => 'muy_baja',
-            };
-
-            $familia->forceFill([
-                'puntaje_prioridad' => $total,
-                'prioridad_social' => $nivel,
-                'puntaje_menores' => $eval['puntaje_menores'],
-                'puntaje_alimentacion' => $eval['puntaje_alimentacion'],
-                'puntaje_asistencia' => $eval['puntaje_asistencia'],
-                'puntaje_participacion' => $eval['puntaje_participacion'],
-                'evaluado_por' => $evaluador->id_usuario,
-                'fecha_ultima_evaluacion' => '2026-06-08',
-            ])->save();
+            $service->evaluar($familia, $eval, $evaluador);
         }
     }
 }
