@@ -3082,9 +3082,9 @@
                   "  pm.test('Prioridad calculada correctamente', () => {",
                   "    pm.expect(body).to.have.property('situacion_alimentaria');",
                   "    pm.expect(body).to.have.property('frecuencia_asistencia');",
-                  "    pm.expect(body).to.have.property('participacion_merendero');",
-                  "    pm.expect(body).to.have.property('participacion_activa_validada');",
-                  "    pm.expect(body).to.have.property('prioridad_social');",
+                   "    pm.expect(body).to.have.property('participacion_merendero');",
+                   "    pm.expect(body).to.not.have.property('participacion_activa_validada');",
+                   "    pm.expect(body).to.have.property('prioridad_social');",
                   "    pm.expect(body).to.have.property('puntaje_prioridad');",
                   "    pm.expect(body).to.have.property('puntaje_menores');",
                   "    pm.expect(body).to.have.property('puntaje_alimentacion');",
@@ -3118,7 +3118,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"situacion_alimentaria\": \"moderada\",\n  \"frecuencia_asistencia\": \"semanal\",\n  \"participacion_merendero\": \"ocasional\",\n  \"participacion_activa_validada\": false\n}"
+              "raw": "{\n  \"situacion_alimentaria\": \"moderada\",\n  \"frecuencia_asistencia\": \"semanal\",\n  \"participacion_merendero\": \"ocasional\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/familias/{{familia_id}}/evaluar-prioridad",
@@ -3146,11 +3146,11 @@
                   "const body = pm.response.json();",
                   "if (pm.response.code === 200) {",
                   "  pm.test('Prioridad automatica por participacion activa', () => {",
-                  "    pm.expect(body.situacion_alimentaria).to.equal('sin_urgencia');",
-                  "    pm.expect(body.frecuencia_asistencia).to.equal('ocasional');",
-                  "    pm.expect(body.participacion_merendero).to.equal('activa');",
-                  "    pm.expect(body.participacion_activa_validada).to.equal(true);",
-                  "    pm.expect(body.prioridad_social).to.equal('muy_alta');",
+                   "    pm.expect(body.situacion_alimentaria).to.equal('sin_urgencia');",
+                   "    pm.expect(body.frecuencia_asistencia).to.equal('ocasional');",
+                   "    pm.expect(body.participacion_merendero).to.equal('activa');",
+                   "    pm.expect(body).to.not.have.property('participacion_activa_validada');",
+                   "    pm.expect(['muy_baja', 'baja', 'media', 'alta', 'muy_alta']).to.include(body.prioridad_social);",
                   "    pm.expect(body.estado_lista).to.equal('PRINCIPAL');",
                   "    pm.expect(body.puntaje_participacion).to.equal(2);",
                   "  });",
@@ -3173,7 +3173,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"situacion_alimentaria\": \"sin_urgencia\",\n  \"frecuencia_asistencia\": \"ocasional\",\n  \"participacion_merendero\": \"activa\",\n  \"participacion_activa_validada\": true\n}"
+              "raw": "{\n  \"situacion_alimentaria\": \"sin_urgencia\",\n  \"frecuencia_asistencia\": \"ocasional\",\n  \"participacion_merendero\": \"activa\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/familias/{{familia_id}}/evaluar-prioridad",

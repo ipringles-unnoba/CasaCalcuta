@@ -9,14 +9,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
-    #[Fillable(['direccion', 'telefono', 'puntaje_prioridad', 'prioridad_social', 'estado_lista', 'fecha_ingreso', 'activa', 'registrado_por', 'referente_id', 'puntaje_menores', 'puntaje_alimentacion', 'puntaje_asistencia', 'puntaje_participacion', 'situacion_alimentaria', 'frecuencia_asistencia', 'participacion_merendero', 'participacion_activa_validada', 'evaluado_por', 'fecha_ultima_evaluacion'])]
+#[Fillable(['direccion', 'telefono', 'puntaje_prioridad', 'prioridad_social', 'estado_lista', 'fecha_ingreso', 'activa', 'registrado_por', 'referente_id', 'puntaje_menores', 'puntaje_alimentacion', 'puntaje_asistencia', 'puntaje_participacion', 'situacion_alimentaria', 'frecuencia_asistencia', 'participacion_merendero', 'evaluado_por', 'fecha_ultima_evaluacion'])]
 class Familia extends Model
 {
     /** @use HasFactory<FamiliaFactory> */
     use HasFactory;
 
-    protected $fillable = ['direccion', 'telefono', 'puntaje_prioridad', 'prioridad_social', 'estado_lista', 'fecha_ingreso', 'activa', 'registrado_por', 'referente_id', 'puntaje_menores', 'puntaje_alimentacion', 'puntaje_asistencia', 'puntaje_participacion', 'situacion_alimentaria', 'frecuencia_asistencia', 'participacion_merendero', 'participacion_activa_validada', 'evaluado_por', 'fecha_ultima_evaluacion'];
+    protected $fillable = ['direccion', 'telefono', 'puntaje_prioridad', 'prioridad_social', 'estado_lista', 'fecha_ingreso', 'activa', 'registrado_por', 'referente_id', 'puntaje_menores', 'puntaje_alimentacion', 'puntaje_asistencia', 'puntaje_participacion', 'situacion_alimentaria', 'frecuencia_asistencia', 'participacion_merendero', 'evaluado_por', 'fecha_ultima_evaluacion'];
 
     protected $appends = ['porciones_comida', 'ausentismo_critico'];
 
@@ -34,9 +35,20 @@ class Familia extends Model
             'puntaje_alimentacion' => 'integer',
             'puntaje_asistencia' => 'integer',
             'puntaje_participacion' => 'integer',
-            'participacion_activa_validada' => 'boolean',
             'fecha_ultima_evaluacion' => 'date',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::saving(function (Familia $familia): void {
+            if ($familia->tieneParticipacionComisionActiva()) {
+                $familia->forceFill([
+                    'participacion_merendero' => 'activa',
+                    'estado_lista' => 'PRINCIPAL',
+                ]);
+            }
+        });
     }
 
     protected function porcionesComida(): Attribute
@@ -92,6 +104,44 @@ class Familia extends Model
     public function registrosAsistencia(): HasMany
     {
         return $this->hasMany(RegistroAsistencia::class, 'familia_id', 'id_familia');
+    }
+
+    public function participacionesComision(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            ParticipacionComision::class,
+            Integrante::class,
+            'familia_id',
+            'integrante_id',
+            'id_familia',
+            'id_integrante'
+        );
+    }
+
+    public function tieneParticipacionComisionActiva(): bool
+    {
+        return $this->participacionesComision()->where('estado', 'activo')->exists();
+    }
+
+    public function sincronizarParticipacionComision(): self
+    {
+        if (! $this->tieneParticipacionComisionActiva()) {
+            return $this->refresh();
+        }
+
+        if (
+            $this->participacion_merendero === 'activa'
+            && mb_strtoupper((string) $this->estado_lista) === 'PRINCIPAL'
+        ) {
+            return $this->refresh();
+        }
+
+        $this->forceFill([
+            'participacion_merendero' => 'activa',
+            'estado_lista' => 'PRINCIPAL',
+        ])->save();
+
+        return $this->refresh();
     }
 
     private function currentAbsenceStreak(): array

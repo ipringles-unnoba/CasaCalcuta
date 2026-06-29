@@ -3,7 +3,9 @@
 namespace Tests\Feature\Api;
 
 use App\Models\Familia;
+use App\Models\Comision;
 use App\Models\Integrante;
+use App\Models\ParticipacionComision;
 use App\Models\Permiso;
 use App\Models\Rol;
 use App\Models\Usuario;
@@ -35,7 +37,7 @@ class FamiliaPrioridadTest extends TestCase
         ]);
     }
 
-    public function test_evaluar_prioridad_uses_business_criteria_and_moves_to_principal_when_validated(): void
+    public function test_participacion_activa_comision_forza_estado_principal_y_merendero_activa(): void
     {
         $user = $this->userWithPermissions(['Gestionar familias', 'Gestionar listas']);
 
@@ -68,36 +70,78 @@ class FamiliaPrioridadTest extends TestCase
             'familia_id' => $familia->id_familia,
         ]);
 
+        $comision = Comision::query()->create([
+            'nombre' => 'Costura de prueba',
+            'activa' => true,
+            'descripcion' => 'Comision de prueba',
+            'encargado' => $user->id_usuario,
+        ]);
+
+        $participacion = ParticipacionComision::query()->create([
+            'fecha_inicio' => now()->toDateString(),
+            'estado' => 'activo',
+            'observaciones' => 'Participacion activa de prueba',
+            'integrante_id' => $familia->integrantes()->firstOrFail()->id_integrante,
+            'comision_id' => $comision->id_comision,
+        ]);
+
+        $this->actingAs($user, 'api')
+            ->putJson('/api/familias/' . $familia->id_familia, [
+                'estado_lista' => 'ESPERA',
+            ])
+            ->assertOk()
+            ->assertJsonPath('estado_lista', 'PRINCIPAL');
+
         $this->actingAs($user, 'api')
             ->postJson('/api/familias/' . $familia->id_familia . '/evaluar-prioridad', [
                 'situacion_alimentaria' => 'moderada',
                 'frecuencia_asistencia' => 'semanal',
                 'participacion_merendero' => 'activa',
-                'participacion_activa_validada' => true,
             ])
             ->assertOk()
             ->assertJsonPath('situacion_alimentaria', 'moderada')
             ->assertJsonPath('frecuencia_asistencia', 'semanal')
             ->assertJsonPath('participacion_merendero', 'activa')
-            ->assertJsonPath('participacion_activa_validada', true)
             ->assertJsonPath('puntaje_menores', 1)
             ->assertJsonPath('puntaje_alimentacion', 2)
             ->assertJsonPath('puntaje_asistencia', 1)
             ->assertJsonPath('puntaje_participacion', 2)
             ->assertJsonPath('puntaje_prioridad', 6)
-            ->assertJsonPath('prioridad_social', 'muy_alta')
-            ->assertJsonPath('estado_lista', 'PRINCIPAL');
+            ->assertJsonPath('prioridad_social', 'alta')
+            ->assertJsonPath('estado_lista', 'PRINCIPAL')
+            ->assertJsonMissingPath('participacion_activa_validada');
 
         $this->assertDatabaseHas('familias', [
             'id_familia' => $familia->id_familia,
             'situacion_alimentaria' => 'moderada',
             'frecuencia_asistencia' => 'semanal',
             'participacion_merendero' => 'activa',
-            'participacion_activa_validada' => true,
             'puntaje_prioridad' => 6,
-            'prioridad_social' => 'muy_alta',
+            'prioridad_social' => 'alta',
             'estado_lista' => 'PRINCIPAL',
         ]);
+
+        $participacion->forceFill(['estado' => 'inactivo'])->save();
+
+        $this->actingAs($user, 'api')
+            ->putJson('/api/familias/' . $familia->id_familia, [
+                'estado_lista' => 'ESPERA',
+            ])
+            ->assertOk()
+            ->assertJsonPath('estado_lista', 'ESPERA');
+
+        $this->actingAs($user, 'api')
+            ->postJson('/api/familias/' . $familia->id_familia . '/evaluar-prioridad', [
+                'situacion_alimentaria' => 'moderada',
+                'frecuencia_asistencia' => 'semanal',
+                'participacion_merendero' => 'ocasional',
+            ])
+            ->assertOk()
+            ->assertJsonPath('participacion_merendero', 'ocasional')
+            ->assertJsonPath('puntaje_participacion', 1)
+            ->assertJsonPath('puntaje_prioridad', 5)
+            ->assertJsonPath('prioridad_social', 'media')
+            ->assertJsonMissingPath('participacion_activa_validada');
     }
 
     private function userWithPermissions(array $permissionNames): Usuario

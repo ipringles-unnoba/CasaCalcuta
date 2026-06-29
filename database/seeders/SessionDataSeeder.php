@@ -93,6 +93,8 @@ class SessionDataSeeder extends Seeder
                 DB::table('participacion_comision')->insert($rows);
             }
 
+            Familia::query()->get()->each->sincronizarParticipacionComision();
+
             $familias = Familia::query()->orderBy('id_familia')->get(['id_familia']);
             $saturdays = collect(CarbonPeriod::create('2026-01-03', '1 week', '2026-06-27'))
                 ->map(fn ($date) => $date->toDateString())

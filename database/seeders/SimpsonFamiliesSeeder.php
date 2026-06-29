@@ -128,35 +128,30 @@ class SimpsonFamiliesSeeder extends Seeder
                 'situacion_alimentaria' => 'moderada',
                 'frecuencia_asistencia' => 'mas_de_una_vez',
                 'participacion_merendero' => 'activa',
-                'participacion_activa_validada' => true,
             ],
             [
                 'direccion' => '744 Evergreen Terrace',
                 'situacion_alimentaria' => 'moderada',
                 'frecuencia_asistencia' => 'semanal',
                 'participacion_merendero' => 'ocasional',
-                'participacion_activa_validada' => false,
             ],
             [
                 'direccion' => 'Apartment 2A, 33 Spooner Street',
                 'situacion_alimentaria' => 'urgente',
                 'frecuencia_asistencia' => 'ocasional',
                 'participacion_merendero' => 'no_participa',
-                'participacion_activa_validada' => false,
             ],
             [
                 'direccion' => 'Wiggum Residence',
                 'situacion_alimentaria' => 'sin_urgencia',
                 'frecuencia_asistencia' => 'ocasional',
                 'participacion_merendero' => 'no_participa',
-                'participacion_activa_validada' => false,
             ],
             [
                 'direccion' => 'Hibbert Residence',
                 'situacion_alimentaria' => 'moderada',
                 'frecuencia_asistencia' => 'semanal',
                 'participacion_merendero' => 'ocasional',
-                'participacion_activa_validada' => false,
             ],
         ];
 

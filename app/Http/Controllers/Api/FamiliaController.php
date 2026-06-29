@@ -311,7 +311,6 @@ class FamiliaController extends Controller
             'situacion_alimentaria' => ['required', 'string', 'in:sin_urgencia,moderada,urgente'],
             'frecuencia_asistencia' => ['required', 'string', 'in:ocasional,semanal,mas_de_una_vez'],
             'participacion_merendero' => ['required', 'string', 'in:no_participa,ocasional,activa'],
-            'participacion_activa_validada' => ['required', 'boolean'],
         ]);
 
         $service = app(PriorizacionSocialService::class);

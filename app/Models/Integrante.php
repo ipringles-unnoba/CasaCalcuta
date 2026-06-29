@@ -89,6 +89,7 @@ class Integrante extends Model
 
             if ($familia !== null) {
                 $familia->recalcular_puntaje_menores();
+                $familia->sincronizarParticipacionComision();
             }
         }
 

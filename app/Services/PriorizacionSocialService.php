@@ -39,33 +39,32 @@ class PriorizacionSocialService
         $situacionAlimentaria = $criterios['situacion_alimentaria'] ?? 'sin_urgencia';
         $frecuenciaAsistencia = $criterios['frecuencia_asistencia'] ?? 'ocasional';
         $participacionMerendero = $criterios['participacion_merendero'] ?? 'no_participa';
-        $participacionActivaValidada = (bool) ($criterios['participacion_activa_validada'] ?? false);
+        $participacionComisionActiva = $familia->tieneParticipacionComisionActiva();
+
+        if ($participacionComisionActiva) {
+            $participacionMerendero = 'activa';
+        }
 
         $puntajeMenores = $this->calcularPuntajeMenores($familia);
         $puntajeAlimentacion = self::SITUACION_ALIMENTARIA_PUNTAJES[$situacionAlimentaria] ?? 0;
         $puntajeAsistencia = self::FRECUENCIA_ASISTENCIA_PUNTAJES[$frecuenciaAsistencia] ?? 0;
         $puntajeParticipacion = self::PARTICIPACION_MERENDERO_PUNTAJES[$participacionMerendero] ?? 0;
 
-        if ($participacionActivaValidada) {
-            $puntajeParticipacion = 2;
-        }
-
         $puntajeTotal = $puntajeMenores + $puntajeAlimentacion + $puntajeAsistencia + $puntajeParticipacion;
 
-        $nivel = $this->obtenerNivel($puntajeTotal, $participacionActivaValidada);
+        $nivel = $this->obtenerNivel($puntajeTotal);
 
         return [
             'situacion_alimentaria' => $situacionAlimentaria,
             'frecuencia_asistencia' => $frecuenciaAsistencia,
             'participacion_merendero' => $participacionMerendero,
-            'participacion_activa_validada' => $participacionActivaValidada,
             'puntaje_menores' => $puntajeMenores,
             'puntaje_alimentacion' => $puntajeAlimentacion,
             'puntaje_asistencia' => $puntajeAsistencia,
             'puntaje_participacion' => $puntajeParticipacion,
             'puntaje_total' => $puntajeTotal,
             'nivel' => $nivel,
-            'prioridad_automatica' => $participacionActivaValidada,
+            'estado_lista_forzado' => $participacionComisionActiva,
         ];
     }
 
@@ -83,12 +82,8 @@ class PriorizacionSocialService
         };
     }
 
-    public function obtenerNivel(int $puntajeTotal, bool $participacionActiva = false): string
+    public function obtenerNivel(int $puntajeTotal): string
     {
-        if ($participacionActiva) {
-            return 'muy_alta';
-        }
-
         foreach (self::NIVELES as $nivel => [$min, $max]) {
             if ($puntajeTotal >= $min && $puntajeTotal <= $max) {
                 return $nivel;
@@ -107,14 +102,13 @@ class PriorizacionSocialService
                 'situacion_alimentaria' => $resultado['situacion_alimentaria'],
                 'frecuencia_asistencia' => $resultado['frecuencia_asistencia'],
                 'participacion_merendero' => $resultado['participacion_merendero'],
-                'participacion_activa_validada' => $resultado['participacion_activa_validada'],
                 'puntaje_prioridad' => $resultado['puntaje_total'],
                 'prioridad_social' => $resultado['nivel'],
                 'puntaje_menores' => $resultado['puntaje_menores'],
                 'puntaje_alimentacion' => $resultado['puntaje_alimentacion'],
                 'puntaje_asistencia' => $resultado['puntaje_asistencia'],
                 'puntaje_participacion' => $resultado['puntaje_participacion'],
-                'estado_lista' => $resultado['prioridad_automatica'] ? 'PRINCIPAL' : $familia->estado_lista,
+                'estado_lista' => $resultado['estado_lista_forzado'] ? 'PRINCIPAL' : $familia->estado_lista,
                 'evaluado_por' => $usuario->id_usuario,
                 'fecha_ultima_evaluacion' => now()->toDateString(),
             ])->save();
