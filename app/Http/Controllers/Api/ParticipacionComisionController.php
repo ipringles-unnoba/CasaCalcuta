@@ -14,9 +14,9 @@ class ParticipacionComisionController extends Controller
 {
     use CrudController;
 
-    private const VIEW_PERMISSIONS = ['Ver comisiones', 'Gestionar comisiones'];
+    private const VIEW_PERMISSIONS = ['Ver comisiones', 'Gestionar comisiones', 'Gestionar participaciones'];
 
-    private const MANAGE_PERMISSION = ['Gestionar comisiones'];
+    private const MANAGE_PERMISSION = ['Gestionar participaciones'];
 
     protected function modelClass(): string
     {

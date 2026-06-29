@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "bdb3d626-34b4-4ee0-80e5-3e6cf006bf2e",
     "name": "CasaCalcuta API",
-    "description": "Colección del backend API de CasaCalcuta.\n\n## Flujo\n\n1. Ejecutar `auth/login`.\n2. Usar `access_token` para los endpoints protegidos.\n3. Crear primero entidades base (`usuarios`, `familias`, `comisiones`, etc.) y luego sus relaciones.\n\n## Variables\n\nUsar `{{base_url}}` y los ids de entorno para probar los endpoints.\n\n## Notas\n\n- La API responde JSON.\n- `contrasena` se envía en texto plano y Laravel la hashea.\n- Los endpoints protegidos usan `Bearer {{access_token}}`.\n- `auditorias` es solo lectura.",
+    "description": "Colección del backend API de CasaCalcuta.\n\n## Flujo\n\n1. Ejecutar `auth/login`.\n2. Usar `access_token` para los endpoints protegidos.\n3. Crear primero entidades base (`usuarios`, `familias`, `comisiones`, etc.) y luego sus relaciones.\n\n## Variables\n\nUsar `{{base_url}}` y los ids de entorno para probar los endpoints.\n\n## Notas\n\n- La API responde JSON.\n- `contrasena` se envía en texto plano y Laravel la hashea.\n- Los endpoints protegidos usan `Bearer {{access_token}}`.\n- `auditorias` es solo lectura.\n- `estado` en participaciones-comision se envía como string ('activo'|'inactivo'|'ocasional'), NO como boolean.\n- Comisiones: CRUD solo para Administrador (permiso 'Gestionar comisiones'). Participaciones: Administrador y Coordinador (permiso 'Gestionar participaciones').",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "3612062"
   },
@@ -1405,6 +1405,32 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Comisiones",
+          "request": {
+            "description": "Lista las participaciones en comisiones de todos los integrantes de una familia. Requiere permiso 'Ver comisiones', 'Gestionar comisiones' o 'Gestionar participaciones'.",
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/familias/{{familia_id}}/comisiones",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "familias",
+                "{{familia_id}}",
+                "comisiones"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -1899,6 +1925,7 @@
         {
           "name": "Listar",
           "request": {
+            "description": "Lista paginada de comisiones. Requiere permiso 'Ver comisiones' o 'Gestionar comisiones'.",
             "method": "GET",
             "header": [
               {
@@ -1928,6 +1955,7 @@
         {
           "name": "Obtener",
           "request": {
+            "description": "Obtiene una comision por ID. Requiere permiso 'Ver comisiones' o 'Gestionar comisiones'.",
             "method": "GET",
             "header": [
               {
@@ -1952,6 +1980,7 @@
         {
           "name": "Crear",
           "request": {
+            "description": "Crea una nueva comision. Requiere permiso 'Gestionar comisiones' (solo Administrador). Body: nombre (string), activa (bool), descripcion (string), encargado (id_usuario).",
             "method": "POST",
             "header": [
               {
@@ -1983,6 +2012,7 @@
         {
           "name": "Actualizar",
           "request": {
+            "description": "Actualiza una comision existente. Requiere permiso 'Gestionar comisiones' (solo Administrador). Todos los campos son opcionales.",
             "method": "PUT",
             "header": [
               {
@@ -2015,6 +2045,7 @@
         {
           "name": "Eliminar",
           "request": {
+            "description": "Elimina una comision. Requiere permiso 'Gestionar comisiones' (solo Administrador).",
             "method": "DELETE",
             "header": [
               {
@@ -2039,6 +2070,7 @@
         {
           "name": "Participaciones",
           "request": {
+            "description": "Lista las participaciones de una comision especifica. Requiere permiso 'Ver comisiones', 'Gestionar comisiones' o 'Gestionar participaciones'.",
             "method": "GET",
             "header": [
               {
@@ -2069,6 +2101,7 @@
         {
           "name": "Listar",
           "request": {
+            "description": "Lista paginada de todas las participaciones en comisiones. Requiere permiso 'Ver comisiones', 'Gestionar comisiones' o 'Gestionar participaciones'.",
             "method": "GET",
             "header": [
               {
@@ -2098,6 +2131,7 @@
         {
           "name": "Obtener",
           "request": {
+            "description": "Obtiene una participacion por ID. Requiere permiso 'Ver comisiones', 'Gestionar comisiones' o 'Gestionar participaciones'.",
             "method": "GET",
             "header": [
               {
@@ -2122,6 +2156,7 @@
         {
           "name": "Crear",
           "request": {
+            "description": "Registra la participacion de un integrante en una comision. Requiere permiso 'Gestionar participaciones' (Administrador o Coordinador). Body: fecha_inicio (date), estado ('activo'|'inactivo'|'ocasional'), observaciones (opcional, string), integrante_id, comision_id.",
             "method": "POST",
             "header": [
               {
@@ -2153,6 +2188,7 @@
         {
           "name": "Actualizar",
           "request": {
+            "description": "Actualiza una participacion existente. Requiere permiso 'Gestionar participaciones' (Administrador o Coordinador). Estado se envia como string ('activo'|'inactivo'|'ocasional'), no como boolean.",
             "method": "PUT",
             "header": [
               {
@@ -2185,6 +2221,7 @@
         {
           "name": "Eliminar",
           "request": {
+            "description": "Elimina una participacion. Requiere permiso 'Gestionar participaciones' (Administrador o Coordinador).",
             "method": "DELETE",
             "header": [
               {
