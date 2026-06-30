@@ -34,7 +34,7 @@ class ComisionController extends Controller
             'nombre' => ['required', 'string', 'max:255'],
             'activa' => ['required', 'boolean'],
             'descripcion' => ['required', 'string', 'max:255'],
-            'encargado' => ['required', 'integer', 'exists:usuarios,id_usuario'],
+            'encargado' => ['nullable', 'integer', 'exists:usuarios,id_usuario'],
         ];
     }
 
@@ -44,7 +44,7 @@ class ComisionController extends Controller
             'nombre' => ['sometimes', 'required', 'string', 'max:255'],
             'activa' => ['sometimes', 'required', 'boolean'],
             'descripcion' => ['sometimes', 'required', 'string', 'max:255'],
-            'encargado' => ['sometimes', 'required', 'integer', 'exists:usuarios,id_usuario'],
+            'encargado' => ['sometimes', 'nullable', 'integer', 'exists:usuarios,id_usuario'],
         ];
     }
 
@@ -99,7 +99,35 @@ class ComisionController extends Controller
             return $response;
         }
 
-        return response()->json($comision->participaciones()->latest('id_participacion_comision')->get());
+        $participaciones = $comision->participaciones()
+            ->with('integrante')
+            ->latest('id_participacion_comision')
+            ->get()
+            ->map(function ($participacion) {
+                $participacion->setAttribute('integrante', $participacion->integrante);
+                $participacion->makeHidden('integrante_id');
+
+                return $participacion;
+            });
+
+        return response()->json($participaciones);
+    }
+
+    public function participantesActivos(Comision $comision): JsonResponse
+    {
+        if ($response = $this->authorizePermission(request(), self::VIEW_PERMISSIONS)) {
+            return $response;
+        }
+
+        $integrantes = $comision->participaciones()
+            ->with('integrante')
+            ->whereRaw('LOWER(estado) = ?', ['activo'])
+            ->get()
+            ->pluck('integrante')
+            ->filter()
+            ->values();
+
+        return response()->json($integrantes);
     }
 
     private function authorizePermission(Request $request, array $requiredPermissions): ?JsonResponse

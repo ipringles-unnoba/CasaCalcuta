@@ -59,6 +59,7 @@ Route::middleware('auth:api')->group(function () {
     Route::apiResource('pedidos-especiales', PedidoEspecialController::class)->parameters(['pedidos-especiales' => 'pedidoEspecial']);
     Route::apiResource('comisiones', ComisionController::class)->parameters(['comisiones' => 'comision']);
     Route::get('comisiones/{comision}/participaciones', [ComisionController::class, 'participaciones']);
+    Route::get('comisiones/{comision}/participaciones/activas', [ComisionController::class, 'participantesActivos']);
 
     Route::apiResource('participaciones-comision', ParticipacionComisionController::class)->parameters(['participaciones-comision' => 'participacionComision']);
     Route::apiResource('visitas-domiciliarias', VisitaDomiciliariaController::class)->parameters(['visitas-domiciliarias' => 'visitaDomiciliaria']);
