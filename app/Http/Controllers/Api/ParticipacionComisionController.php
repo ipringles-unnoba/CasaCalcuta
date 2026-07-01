@@ -65,7 +65,20 @@ class ParticipacionComisionController extends Controller
             return $response;
         }
 
-        return $this->storeRecord($request);
+        $data = $request->validate($this->storeRules());
+
+        $participacionComision = ParticipacionComision::query()->updateOrCreate(
+            [
+                'integrante_id' => $data['integrante_id'],
+                'comision_id' => $data['comision_id'],
+            ],
+            $data
+        );
+
+        return response()->json(
+            $participacionComision->load($this->relations()),
+            $participacionComision->wasRecentlyCreated ? 201 : 200
+        );
     }
 
     public function show(ParticipacionComision $participacionComision): JsonResponse
